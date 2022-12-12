@@ -18,7 +18,7 @@ import java.util.List;
 public class ByActor {
     @Resource
     ActorMovieRepository actorMovieRepository;
-    @RequestMapping(value = "count/movie",method = RequestMethod.GET)
+    @RequestMapping(value = "/ount/movie",method = RequestMethod.GET)
     public Integer getActorMovieByActorNameAndIsstarring(@RequestParam(value = "actorName")String actorName , @RequestParam(value = "isStarring", required = false)Boolean isStarring){
         if(!isStarring){
             List<ActorMovieEntity> actorMovieEntities = actorMovieRepository.findAllByActorName(actorName);
