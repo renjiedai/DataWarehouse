@@ -19,7 +19,6 @@ public class ByDirector {
     DirectorMovieRepository directorMovieRepository;
     @RequestMapping(value = "count/movie",method = RequestMethod.GET)
     public ResponseEntity<Integer> getDirectorMovieByDirectorName(@RequestParam(value = "directorName")String directorName){
-        System.out.println(directorName);
         List<DirectorMovieEntity> directorMovieEntities = directorMovieRepository.findByDirectorName(directorName);
         return new ResponseEntity<>(directorMovieEntities.size(), HttpStatus.OK);
     }
