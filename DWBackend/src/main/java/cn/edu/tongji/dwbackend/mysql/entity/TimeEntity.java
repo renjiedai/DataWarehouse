@@ -8,10 +8,10 @@ import java.util.Objects;
 @Table(name = "time", schema = "DW", catalog = "")
 public class TimeEntity {
     private int timeId;
-    private short year;
-    private byte month;
+    private int year;
+    private int month;
     private byte day;
-    private byte season;
+    private int season;
     private byte weekday;
     private Date releaseTime;
 
@@ -27,21 +27,21 @@ public class TimeEntity {
 
     @Basic
     @Column(name = "year")
-    public short getYear() {
+    public int getYear() {
         return year;
     }
 
-    public void setYear(short year) {
+    public void setYear(int year) {
         this.year = year;
     }
 
     @Basic
     @Column(name = "month")
-    public byte getMonth() {
+    public int getMonth() {
         return month;
     }
 
-    public void setMonth(byte month) {
+    public void setMonth(int month) {
         this.month = month;
     }
 
@@ -57,11 +57,11 @@ public class TimeEntity {
 
     @Basic
     @Column(name = "season")
-    public byte getSeason() {
+    public int getSeason() {
         return season;
     }
 
-    public void setSeason(byte season) {
+    public void setSeason(int season) {
         this.season = season;
     }
 
