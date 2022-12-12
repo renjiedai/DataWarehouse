@@ -15,6 +15,7 @@ public class MovieEntity {
     private String movieType;
     private int commentNum;
     private Date releaseTime;
+    private byte movieFormatNum;
 
     @Id
     @Column(name = "movie_id")
@@ -40,6 +41,10 @@ public class MovieEntity {
     @Column(name = "movie_type_num")
     public byte getMovieTypeNum() {
         return movieTypeNum;
+    }
+
+    public void setMovieTypeNum(Byte movieTypeNum) {
+        this.movieTypeNum = movieTypeNum;
     }
 
     public void setMovieTypeNum(byte movieTypeNum) {
@@ -107,5 +112,15 @@ public class MovieEntity {
     @Override
     public int hashCode() {
         return Objects.hash(movieId, movieName, movieTypeNum, movieScore, movieAsin, movieType, commentNum, releaseTime);
+    }
+
+    @Basic
+    @Column(name = "movie_format_num")
+    public byte getMovieFormatNum() {
+        return movieFormatNum;
+    }
+
+    public void setMovieFormatNum(byte movieFormatNum) {
+        this.movieFormatNum = movieFormatNum;
     }
 }
