@@ -22,5 +22,11 @@ public class ByDirector {
         List<DirectorMovieEntity> directorMovieEntities = directorMovieRepository.findByDirectorName(directorName);
         return new ResponseEntity<>(directorMovieEntities.size(), HttpStatus.OK);
     }
+    @RequestMapping(value = "list/movie",method = RequestMethod.GET)
+    public ResponseEntity<List<DirectorMovieEntity>> getDirectorMovieListByDirectorName(@RequestParam(value = "directorName")String directorName){
+        System.out.println(directorName);
+        List<DirectorMovieEntity> directorMovieEntities = directorMovieRepository.findByDirectorName(directorName);
+        return new ResponseEntity<>(directorMovieEntities, HttpStatus.OK);
+    }
 
 }

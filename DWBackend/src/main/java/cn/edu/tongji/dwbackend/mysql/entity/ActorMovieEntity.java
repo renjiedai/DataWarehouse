@@ -1,5 +1,7 @@
 package cn.edu.tongji.dwbackend.mysql.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -9,6 +11,7 @@ import java.util.Objects;
 public class ActorMovieEntity {
     private String actorName;
     private int movieId;
+    @JsonProperty("isStarring")
     private boolean isStarring;
 
     @Id
