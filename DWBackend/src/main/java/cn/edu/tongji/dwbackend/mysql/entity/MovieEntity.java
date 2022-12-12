@@ -9,13 +9,11 @@ import java.util.Objects;
 public class MovieEntity {
     private int movieId;
     private String movieName;
-    private byte movieTypeNum;
+    private byte movieFormatNum;
     private double movieScore;
     private String movieAsin;
-    private String movieType;
     private int commentNum;
     private Date releaseTime;
-    private byte movieFormatNum;
 
     @Id
     @Column(name = "movie_id")
@@ -38,17 +36,13 @@ public class MovieEntity {
     }
 
     @Basic
-    @Column(name = "movie_type_num")
-    public byte getMovieTypeNum() {
-        return movieTypeNum;
+    @Column(name = "movie_format_num")
+    public byte getMovieFormatNum() {
+        return movieFormatNum;
     }
 
-    public void setMovieTypeNum(Byte movieTypeNum) {
-        this.movieTypeNum = movieTypeNum;
-    }
-
-    public void setMovieTypeNum(byte movieTypeNum) {
-        this.movieTypeNum = movieTypeNum;
+    public void setMovieFormatNum(byte movieFormatNum) {
+        this.movieFormatNum = movieFormatNum;
     }
 
     @Basic
@@ -69,16 +63,6 @@ public class MovieEntity {
 
     public void setMovieAsin(String movieAsin) {
         this.movieAsin = movieAsin;
-    }
-
-    @Basic
-    @Column(name = "movie_type")
-    public String getMovieType() {
-        return movieType;
-    }
-
-    public void setMovieType(String movieType) {
-        this.movieType = movieType;
     }
 
     @Basic
@@ -106,21 +90,11 @@ public class MovieEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MovieEntity that = (MovieEntity) o;
-        return movieId == that.movieId && movieTypeNum == that.movieTypeNum && Double.compare(that.movieScore, movieScore) == 0 && commentNum == that.commentNum && Objects.equals(movieName, that.movieName) && Objects.equals(movieAsin, that.movieAsin) && Objects.equals(movieType, that.movieType) && Objects.equals(releaseTime, that.releaseTime);
+        return movieId == that.movieId && movieFormatNum == that.movieFormatNum && Double.compare(that.movieScore, movieScore) == 0 && commentNum == that.commentNum && Objects.equals(movieName, that.movieName) && Objects.equals(movieAsin, that.movieAsin) && Objects.equals(releaseTime, that.releaseTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(movieId, movieName, movieTypeNum, movieScore, movieAsin, movieType, commentNum, releaseTime);
-    }
-
-    @Basic
-    @Column(name = "movie_format_num")
-    public byte getMovieFormatNum() {
-        return movieFormatNum;
-    }
-
-    public void setMovieFormatNum(byte movieFormatNum) {
-        this.movieFormatNum = movieFormatNum;
+        return Objects.hash(movieId, movieName, movieFormatNum, movieScore, movieAsin, commentNum, releaseTime);
     }
 }

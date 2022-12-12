@@ -1,5 +1,6 @@
 package cn.edu.tongji.dwbackend.mysql.entity;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Id;
 import java.io.Serializable;
@@ -52,4 +53,5 @@ public class ViewActorActorCollaborationEntityPK implements Serializable {
     public int hashCode() {
         return Objects.hash(actorName1, actorName2, collaborateCount);
     }
+
 }
