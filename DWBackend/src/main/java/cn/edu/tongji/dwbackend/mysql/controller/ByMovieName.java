@@ -19,10 +19,7 @@ public class ByMovieName {
     MovieRepository movieRepository;
     @RequestMapping(value = "count/format",method = RequestMethod.GET)
     public ResponseEntity<Integer> getMovieByMovieName(@RequestParam(value = "movieName")String movieName){
-        System.out.println(movieName);
-        MovieEntity movieEntities = movieRepository.findFirstByMovieName(movieName);
-        System.out.println(movieEntities);
+        MovieEntity movieEntities = movieRepository.findByMovieName(movieName);
         return new ResponseEntity<>((int)movieEntities.getMovieFormatNum(), HttpStatus.OK);
-        // return new ResponseEntity<>((int) movieRepository.findByMovieName(movieName).getMovieFormatNum(), HttpStatus.OK);
     }
 }
