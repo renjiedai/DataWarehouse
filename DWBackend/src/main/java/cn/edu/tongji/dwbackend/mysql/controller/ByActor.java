@@ -2,6 +2,9 @@ package cn.edu.tongji.dwbackend.mysql.controller;
 
 import cn.edu.tongji.dwbackend.mysql.entity.ActorMovieEntity;
 import cn.edu.tongji.dwbackend.mysql.entity.DirectorMovieEntity;
+import cn.edu.tongji.dwbackend.mysql.entity.ViewActorActorCollaborationEntity;
+import cn.edu.tongji.dwbackend.mysql.entity.ViewActorActorEntity;
+import cn.edu.tongji.dwbackend.mysql.repository.ActorActorRepo;
 import cn.edu.tongji.dwbackend.mysql.repository.ActorMovieRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,6 +22,9 @@ import java.util.List;
 public class ByActor {
     @Resource
     ActorMovieRepository actorMovieRepository;
+
+
+
     @RequestMapping(value = "count/movie",method = RequestMethod.GET)
     public Integer getActorMovieByActorNameAndIsstarring(@RequestParam(value = "actorName")String actorName , @RequestParam(value = "isStarring", required = false)Boolean isStarring){
         if(!isStarring){
@@ -42,4 +49,11 @@ public class ByActor {
             return new ResponseEntity<>(actorMovieEntities, HttpStatus.OK);
         }
     }
+
+
+
+
+
+
+
 }
