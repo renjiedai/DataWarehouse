@@ -64,6 +64,7 @@ public class ByActor {
             for(ActorMovieEntity a:actorMovieEntities){
                 name.add(movieRepository.findFirstByMovieId(a.getMovieId()).getMovieName());
             }
+            result.setNum(name.size());
             result.setData(name);
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
@@ -74,8 +75,12 @@ public class ByActor {
             result.setTime(end-start);
             List<String> name=new ArrayList<>();
             for(ActorMovieEntity a:actorMovieEntities){
-                name.add(movieRepository.findFirstByMovieId(a.getMovieId()).getMovieName());
+                if(name.size()<=100){
+                    name.add(movieRepository.findFirstByMovieId(a.getMovieId()).getMovieName());
+                }
+
             }
+            result.setNum(name.size());
             result.setData(name);
             return new ResponseEntity<>(result, HttpStatus.OK);
         }

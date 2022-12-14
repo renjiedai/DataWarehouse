@@ -40,16 +40,20 @@ public class Combine {
 
         List<ViewDirectorScoreTypeEntity> viewDirectorScoreTypeEntities = dicScRepo.findAll();
         List<String> name=new ArrayList<>();
-
+        int i=0;
         for (ViewDirectorScoreTypeEntity v:viewDirectorScoreTypeEntities){
-            if(v.getNegativeRate()>rate&&v.getDirector().equals(v.getDirector())&&v.getType().equals(type)&&name.contains(v.getMovieName())==false){
-                name.add(v.getMovieName());
+            if(v.getNegativeRate()>rate&&directorName.equals(v.getDirector())&&v.getType().equals(type)&&name.contains(v.getMovieName())==false){
+                i++;
+                if(name.size()<=100){
+                    name.add(v.getMovieName());
+                }
+
             }
         }
         long end=System.currentTimeMillis();
         result.setTime(end-start);
         result.setData(name);
-
+        result.setNum(i);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -64,16 +68,20 @@ public class Combine {
 
         List<ViewActorScoreTimeEntity> viewActorScoreTimeEntities = acScRepo.findAll();
         List<String> nameL=new ArrayList<>();
-
+        int i=0;
         for (ViewActorScoreTimeEntity v:viewActorScoreTimeEntities){
 
             if(v.getYear()>=Integer.parseInt(start)&&v.getYear()<=Integer.parseInt(end)&&v.getScore()>=score&&name.equals(v.getActor())&&nameL.contains(v.getMovieName())==false){
-                nameL.add(v.getMovieName());
+                i++;
+                if(nameL.size()<=100){
+                    nameL.add(v.getMovieName());
+                }
+
             }
 
 
         }
-
+        result.setNum(i);
         long endTime=System.currentTimeMillis();
         result.setTime(endTime-startTime);
         result.setData(nameL);

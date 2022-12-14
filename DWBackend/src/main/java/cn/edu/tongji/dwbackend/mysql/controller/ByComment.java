@@ -32,11 +32,17 @@ public class ByComment {
         List<ViewScoreMovieEntity> viewScoreMovieEntities=commentRepository.findAll();
 
         List<String> l=new ArrayList<>();
+        int i=0;
         for(ViewScoreMovieEntity v:viewScoreMovieEntities){
             if(v.getScore()>=score){
-                l.add(v.getMovieName());
+                i++;
+                if(l.size()<=100){
+                    l.add(v.getMovieName());
+                }
+
             }
         }
+        result.setNum(i);
         result.setData(l);
         long end=System.currentTimeMillis();
         result.setTime(end-start);
@@ -51,11 +57,17 @@ public class ByComment {
 
         List<ViewScoreMovieEntity> viewScoreMovieEntities=commentRepository.findAll();
         List<String> l=new ArrayList<>();
+        int i=0;
         for(ViewScoreMovieEntity v:viewScoreMovieEntities){
             if(v.getPositiveRate()>=rate){
-                l.add(v.getMovieName());
+                i++;
+                if(l.size()<=100){
+                    l.add(v.getMovieName());
+                }
+
             }
         }
+        result.setNum(i);
         result.setData(l);
         long end=System.currentTimeMillis();
         result.setTime(end-start);

@@ -15,6 +15,8 @@ public class GetNameList {
 
     List<String> data;
 
+    int num;
+
     long time;
     
 }
