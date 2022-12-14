@@ -2,7 +2,7 @@ package cn.edu.tongji.dwbackend.mysql.controller;
 
 
 import cn.edu.tongji.dwbackend.dto.GetList;
-import cn.edu.tongji.dwbackend.dto.GetNameList;
+import cn.edu.tongji.dwbackend.mysql.dto.GetNameList;
 import cn.edu.tongji.dwbackend.mysql.entity.ViewActorActorCollaborationEntity;
 import cn.edu.tongji.dwbackend.mysql.entity.ViewActorDirectorCollaborationEntity;
 import cn.edu.tongji.dwbackend.mysql.entity.ViewDirectorDirectorCollaborationEntity;

@@ -1,12 +1,8 @@
 package cn.edu.tongji.dwbackend.mysql.controller;
 
-import cn.edu.tongji.dwbackend.dto.GetNameList;
-import cn.edu.tongji.dwbackend.dto.GetNum;
+import cn.edu.tongji.dwbackend.mysql.dto.GetNameList;
+import cn.edu.tongji.dwbackend.mysql.dto.GetNum;
 import cn.edu.tongji.dwbackend.mysql.entity.ActorMovieEntity;
-import cn.edu.tongji.dwbackend.mysql.entity.DirectorMovieEntity;
-import cn.edu.tongji.dwbackend.mysql.entity.ViewActorActorCollaborationEntity;
-import cn.edu.tongji.dwbackend.mysql.entity.ViewActorActorEntity;
-import cn.edu.tongji.dwbackend.mysql.repository.ActorActorRepo;
 import cn.edu.tongji.dwbackend.mysql.repository.ActorMovieRepository;
 import cn.edu.tongji.dwbackend.mysql.repository.MovieRepository;
 import org.springframework.http.HttpStatus;

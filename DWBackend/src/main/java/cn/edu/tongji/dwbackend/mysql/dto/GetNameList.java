@@ -1,4 +1,4 @@
-package cn.edu.tongji.dwbackend.dto;
+package cn.edu.tongji.dwbackend.mysql.dto;
 
 
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package cn.edu.tongji.dwbackend.dto;
+package cn.edu.tongji.dwbackend.mysql.dto;
 
 import cn.edu.tongji.dwbackend.mysql.entity.ViewActorActorCollaborationEntity;
 import lombok.AllArgsConstructor;
