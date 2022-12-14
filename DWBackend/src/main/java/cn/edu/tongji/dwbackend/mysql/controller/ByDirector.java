@@ -56,6 +56,7 @@ public class ByDirector {
         long end=System.currentTimeMillis();
         result.setTime(end-start);
         result.setData(name);
+        result.setNum(name.size());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
