@@ -36,7 +36,7 @@ public class Combine {
         List<String> result=new ArrayList<>();
 
         for (ViewDirectorScoreTypeEntity v:viewDirectorScoreTypeEntities){
-            if(v.getNegativeRate()>rate&&v.getDirector().equals("César Ducasse")&&v.getType().equals(type)){
+            if(v.getNegativeRate()>rate&&v.getDirector().equals(v.getDirector())&&v.getType().equals(type)){
                 result.add(v.getMovieName());
             }
 

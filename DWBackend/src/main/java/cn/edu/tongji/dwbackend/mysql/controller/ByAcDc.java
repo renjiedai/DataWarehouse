@@ -1,6 +1,8 @@
 package cn.edu.tongji.dwbackend.mysql.controller;
 
 
+import cn.edu.tongji.dwbackend.dto.GetList;
+import cn.edu.tongji.dwbackend.dto.GetNameList;
 import cn.edu.tongji.dwbackend.mysql.entity.ViewActorActorCollaborationEntity;
 import cn.edu.tongji.dwbackend.mysql.entity.ViewActorDirectorCollaborationEntity;
 import cn.edu.tongji.dwbackend.mysql.entity.ViewDirectorDirectorCollaborationEntity;
@@ -31,11 +33,15 @@ public class ByAcDc {
     @RequestMapping(value = "count/acac",method = RequestMethod.GET)
     public ResponseEntity<List<ViewActorActorCollaborationEntity>> gerActorColla(){
 
+        long start=System.currentTimeMillis();
+        GetNameList result=new GetNameList();
+
         List<ViewActorActorCollaborationEntity> actorActorMovieEntities = actorActorRepo.findAll();
-        List<ViewActorActorCollaborationEntity> result=new ArrayList<>();
+        long end=System.currentTimeMillis();
+        List<ViewActorActorCollaborationEntity> l=new ArrayList<>();
         for(ViewActorActorCollaborationEntity a:actorActorMovieEntities){
             if(a.getCollaborateCount()>20){
-                result.add(a);
+                l.add(a);
             }
 
         }
