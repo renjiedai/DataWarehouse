@@ -1,6 +1,7 @@
 package cn.edu.tongji.dwbackend.mysql.controller;
 
 
+import cn.edu.tongji.dwbackend.mysql.dto.GetNameList;
 import cn.edu.tongji.dwbackend.mysql.entity.DirectorMovieEntity;
 import cn.edu.tongji.dwbackend.mysql.entity.ViewScoreMovieEntity;
 import cn.edu.tongji.dwbackend.mysql.repository.CommentRepository;
@@ -23,26 +24,41 @@ public class ByComment {
     CommentRepository commentRepository;
 
     @RequestMapping(value = "/score",method = RequestMethod.GET)
-    public ResponseEntity<List<String>> getMovieNameByScore(@RequestParam  double score ){
+    public ResponseEntity<GetNameList> getMovieNameByScore(@RequestParam  double score ){
+
+        long start=System.currentTimeMillis();
+        GetNameList result=new GetNameList();
+
         List<ViewScoreMovieEntity> viewScoreMovieEntities=commentRepository.findAll();
-        List<String> result=new ArrayList<>();
+
+        List<String> l=new ArrayList<>();
         for(ViewScoreMovieEntity v:viewScoreMovieEntities){
             if(v.getScore()>=score){
-                result.add(v.getMovieName());
+                l.add(v.getMovieName());
             }
         }
+        result.setData(l);
+        long end=System.currentTimeMillis();
+        result.setTime(end-start);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/rate",method = RequestMethod.GET)
-    public ResponseEntity<List<String>> getMovieNameByRate(@RequestParam  double rate ){
+    public ResponseEntity<GetNameList> getMovieNameByRate(@RequestParam  double rate ){
+
+        long start=System.currentTimeMillis();
+        GetNameList result=new GetNameList();
+
         List<ViewScoreMovieEntity> viewScoreMovieEntities=commentRepository.findAll();
-        List<String> result=new ArrayList<>();
+        List<String> l=new ArrayList<>();
         for(ViewScoreMovieEntity v:viewScoreMovieEntities){
             if(v.getPositiveRate()>=rate){
-                result.add(v.getMovieName());
+                l.add(v.getMovieName());
             }
         }
+        result.setData(l);
+        long end=System.currentTimeMillis();
+        result.setTime(end-start);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

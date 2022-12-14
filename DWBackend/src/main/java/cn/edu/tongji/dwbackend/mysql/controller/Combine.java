@@ -1,6 +1,7 @@
 package cn.edu.tongji.dwbackend.mysql.controller;
 
 
+import cn.edu.tongji.dwbackend.mysql.dto.GetNameList;
 import cn.edu.tongji.dwbackend.mysql.entity.DirectorMovieEntity;
 import cn.edu.tongji.dwbackend.mysql.entity.ViewActorScoreTimeEntity;
 import cn.edu.tongji.dwbackend.mysql.entity.ViewDirectorScoreTypeEntity;
@@ -31,34 +32,51 @@ public class Combine {
 
 
     @RequestMapping(value = "list/rate",method = RequestMethod.GET)
-    public ResponseEntity<List<String>> getCombine2(@RequestParam String directorName,@RequestParam double rate,@RequestParam String type){
+    public ResponseEntity<GetNameList> getCombine2(@RequestParam String directorName, @RequestParam double rate, @RequestParam String type){
+
+
+        long start=System.currentTimeMillis();
+        GetNameList result=new GetNameList();
+
         List<ViewDirectorScoreTypeEntity> viewDirectorScoreTypeEntities = dicScRepo.findAll();
-        List<String> result=new ArrayList<>();
+        List<String> name=new ArrayList<>();
 
         for (ViewDirectorScoreTypeEntity v:viewDirectorScoreTypeEntities){
-            if(v.getNegativeRate()>rate&&v.getDirector().equals(v.getDirector())&&v.getType().equals(type)){
-                result.add(v.getMovieName());
+            if(v.getNegativeRate()>rate&&v.getDirector().equals(v.getDirector())&&v.getType().equals(type)&&name.contains(v.getMovieName())==false){
+                name.add(v.getMovieName());
             }
-
-
         }
+        long end=System.currentTimeMillis();
+        result.setTime(end-start);
+        result.setData(name);
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @RequestMapping(value = "list/score",method = RequestMethod.GET)
-    public ResponseEntity<List<String>> getCombine3(@RequestParam String start,
+    public ResponseEntity<GetNameList> getCombine3(@RequestParam String start,
                                                     @RequestParam String end ,@RequestParam String name,double score){
+
+
+        long startTime=System.currentTimeMillis();
+        GetNameList result=new GetNameList();
+
+
         List<ViewActorScoreTimeEntity> viewActorScoreTimeEntities = acScRepo.findAll();
-        List<String> result=new ArrayList<>();
+        List<String> nameL=new ArrayList<>();
 
         for (ViewActorScoreTimeEntity v:viewActorScoreTimeEntities){
 
-            if(v.getYear()>=Integer.parseInt(start)&&v.getYear()<=Integer.parseInt(end)&&v.getScore()>=score&&name.equals(v.getActor())){
-                result.add(v.getMovieName());
+            if(v.getYear()>=Integer.parseInt(start)&&v.getYear()<=Integer.parseInt(end)&&v.getScore()>=score&&name.equals(v.getActor())&&nameL.contains(v.getMovieName())==false){
+                nameL.add(v.getMovieName());
             }
 
 
         }
+
+        long endTime=System.currentTimeMillis();
+        result.setTime(endTime-startTime);
+        result.setData(nameL);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

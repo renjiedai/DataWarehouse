@@ -1,8 +1,10 @@
 package cn.edu.tongji.dwbackend.mysql.controller;
 
 
-import cn.edu.tongji.dwbackend.dto.GetList;
-import cn.edu.tongji.dwbackend.mysql.dto.GetNameList;
+
+import cn.edu.tongji.dwbackend.mysql.dto.GetAcAcColla;
+import cn.edu.tongji.dwbackend.mysql.dto.GetDcAcColla;
+import cn.edu.tongji.dwbackend.mysql.dto.GetDcDcColla;
 import cn.edu.tongji.dwbackend.mysql.entity.ViewActorActorCollaborationEntity;
 import cn.edu.tongji.dwbackend.mysql.entity.ViewActorDirectorCollaborationEntity;
 import cn.edu.tongji.dwbackend.mysql.entity.ViewDirectorDirectorCollaborationEntity;
@@ -20,8 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/mysql/byAcDc")
-public class ByAcDc {
+@RequestMapping("/mysql/byColla")
+public class ByColla {
 
     @Resource
     ActorActorRepo actorActorRepo;
@@ -31,10 +33,10 @@ public class ByAcDc {
     ActorDirectoRepo actorDirectoRepo;
 
     @RequestMapping(value = "count/acac",method = RequestMethod.GET)
-    public ResponseEntity<List<ViewActorActorCollaborationEntity>> gerActorColla(){
+    public ResponseEntity<GetAcAcColla> gerActorColla(){
 
         long start=System.currentTimeMillis();
-        GetNameList result=new GetNameList();
+        GetAcAcColla result=new GetAcAcColla();
 
         List<ViewActorActorCollaborationEntity> actorActorMovieEntities = actorActorRepo.findAll();
         long end=System.currentTimeMillis();
@@ -45,33 +47,43 @@ public class ByAcDc {
             }
 
         }
-
+        result.setData(l);
+        result.setTime(end-start);
         return new ResponseEntity<>(result, HttpStatus.OK); }
 
     @RequestMapping(value = "count/colla/dcac",method = RequestMethod.GET)
-    public ResponseEntity<List<ViewActorDirectorCollaborationEntity> > getDicAcColla(){
+    public ResponseEntity<GetDcAcColla> getDicAcColla(){
+
+        GetDcAcColla result=new GetDcAcColla();
+        long start=System.currentTimeMillis();
         List<ViewActorDirectorCollaborationEntity> viewActorDirectorCollaborationEntities=actorDirectoRepo.findAll();
-        List<ViewActorDirectorCollaborationEntity> result=new ArrayList<>();
+        long end=System.currentTimeMillis();
+        List<ViewActorDirectorCollaborationEntity> l=new ArrayList<>();
         for(ViewActorDirectorCollaborationEntity a:viewActorDirectorCollaborationEntities){
             if(a.getCollaborateCount()>15){
-                result.add(a);
+                l.add(a);
             }
         }
-
+        result.setData(l);
+        result.setTime(end-start);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "count/colla/dcdc",method = RequestMethod.GET)
-    public ResponseEntity<List<ViewDirectorDirectorCollaborationEntity>> getDicDic(){
-
+    public ResponseEntity<GetDcDcColla> getDicDic(){
+        GetDcDcColla result=new GetDcDcColla();
+        long start=System.currentTimeMillis();
         List<ViewDirectorDirectorCollaborationEntity> viewDirectorDirectorCollaborationEntities = directorDirectorRepo.findAll();
-        List<ViewDirectorDirectorCollaborationEntity> result=new ArrayList<>();
+        long end=System.currentTimeMillis();
+        List<ViewDirectorDirectorCollaborationEntity> l=new ArrayList<>();
         for(ViewDirectorDirectorCollaborationEntity a:viewDirectorDirectorCollaborationEntities){
             if(a.getCollaborateCount()>15){
-                result.add(a);
+                l.add(a);
             }
         }
+        result.setData(l);
+        result.setTime(end-start);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
