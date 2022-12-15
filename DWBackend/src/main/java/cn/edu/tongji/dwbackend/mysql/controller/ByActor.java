@@ -1,11 +1,10 @@
 package cn.edu.tongji.dwbackend.mysql.controller;
 
+import cn.edu.tongji.dwbackend.mysql.dto.GetNameList;
+import cn.edu.tongji.dwbackend.mysql.dto.GetNum;
 import cn.edu.tongji.dwbackend.mysql.entity.ActorMovieEntity;
-import cn.edu.tongji.dwbackend.mysql.entity.DirectorMovieEntity;
-import cn.edu.tongji.dwbackend.mysql.entity.ViewActorActorCollaborationEntity;
-import cn.edu.tongji.dwbackend.mysql.entity.ViewActorActorEntity;
-import cn.edu.tongji.dwbackend.mysql.repository.ActorActorRepo;
 import cn.edu.tongji.dwbackend.mysql.repository.ActorMovieRepository;
+import cn.edu.tongji.dwbackend.mysql.repository.MovieRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,31 +21,68 @@ import java.util.List;
 public class ByActor {
     @Resource
     ActorMovieRepository actorMovieRepository;
+    private final MovieRepository movieRepository;
 
+    public ByActor(MovieRepository movieRepository) {
+        this.movieRepository = movieRepository;
+    }
 
 
     @RequestMapping(value = "count/movie",method = RequestMethod.GET)
-    public Integer getActorMovieByActorNameAndIsstarring(@RequestParam(value = "actorName")String actorName , @RequestParam(value = "isStarring", required = false)Boolean isStarring){
+    public GetNum getActorMovieByActorNameAndIsstarring(@RequestParam(value = "actorName")String actorName , @RequestParam(value = "isStarring", required = false)Boolean isStarring){
+
+        long start=System.currentTimeMillis();
+        GetNum result=new GetNum();
         if(!isStarring){
             List<ActorMovieEntity> actorMovieEntities = actorMovieRepository.findAllByActorName(actorName);
-            return actorMovieEntities.size();
+            result.setNum(actorMovieEntities.size());
+            long end=System.currentTimeMillis();
+            result.setTime(end-start);
+            return result;
         }
         else{
             List<ActorMovieEntity> actorMovieEntities = actorMovieRepository.findAllByActorNameAndStarring(actorName, isStarring);
-            return actorMovieEntities.size();
+            result.setNum(actorMovieEntities.size());
+            long end=System.currentTimeMillis();
+            result.setTime(end-start);
+
+            return result;
         }
     }
 
     @RequestMapping(value = "list/movie",method = RequestMethod.GET)
-    public ResponseEntity<List<ActorMovieEntity>> getActorMovieListByActorNameAndIsstarring(@RequestParam(value = "actorName")String actorName , @RequestParam(value = "isStarring", required = false)Boolean isStarring){
+    public ResponseEntity<GetNameList> getActorMovieListByActorNameAndIsstarring(@RequestParam(value = "actorName")String actorName , @RequestParam(value = "isStarring", required = false)Boolean isStarring){
         System.out.println(isStarring);
+
+        long start=System.currentTimeMillis();
+        GetNameList result=new GetNameList();
         if(!isStarring){
             List<ActorMovieEntity> actorMovieEntities = actorMovieRepository.findAllByActorName(actorName);
-            return new ResponseEntity<>(actorMovieEntities, HttpStatus.OK);
+            long end=System.currentTimeMillis();
+            result.setTime(end-start);
+            List<String> name=new ArrayList<>();
+            for(ActorMovieEntity a:actorMovieEntities){
+                name.add(movieRepository.findFirstByMovieId(a.getMovieId()).getMovieName());
+            }
+            result.setNum(name.size());
+            result.setData(name);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         }
         else{
             List<ActorMovieEntity> actorMovieEntities = actorMovieRepository.findAllByActorNameAndStarring(actorName, isStarring);
-            return new ResponseEntity<>(actorMovieEntities, HttpStatus.OK);
+
+            long end=System.currentTimeMillis();
+            result.setTime(end-start);
+            List<String> name=new ArrayList<>();
+            for(ActorMovieEntity a:actorMovieEntities){
+                if(name.size()<=100){
+                    name.add(movieRepository.findFirstByMovieId(a.getMovieId()).getMovieName());
+                }
+
+            }
+            result.setNum(name.size());
+            result.setData(name);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         }
     }
 

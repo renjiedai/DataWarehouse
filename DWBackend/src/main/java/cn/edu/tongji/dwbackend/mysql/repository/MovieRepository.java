@@ -12,4 +12,6 @@ import java.util.List;
 
 public interface MovieRepository extends JpaRepository<MovieEntity, Integer>, JpaSpecificationExecutor<MovieEntity> {
     MovieEntity findByMovieName(String movieName);
+
+    MovieEntity findFirstByMovieId(int id);
 }
