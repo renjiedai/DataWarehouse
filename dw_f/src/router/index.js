@@ -1,11 +1,34 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import SearchView from '../views/SearchView.vue'
+import CooperateView from '../views/CooperateView.vue'
+import MovieinfoView from '../views/MovieinfoView.vue'
+import TracebackView from '../views/TracebackView.vue'
+
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView
+    redirect: '/searchmovie',
+  },
+  {
+    path: '/searchmovie',
+    name: 'searchmovie',
+    component: SearchView
+  },
+  {
+    path: '/movieinfo',
+    name: 'movieinfo',
+    component: MovieinfoView
+  },
+  {
+    path: '/traceback',
+    name: 'cooperatesearch',
+    component: TracebackView
+  },
+  {
+    path: '/cooperate',
+    name: 'cooperatesearch',
+    component: CooperateView
   },
 
 ]
