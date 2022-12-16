@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -33,7 +34,7 @@ public class ByColla {
     ActorDirectoRepo actorDirectoRepo;
 
     @RequestMapping(value = "count/acac",method = RequestMethod.GET)
-    public ResponseEntity<GetAcAcColla> gerActorColla(){
+    public ResponseEntity<GetAcAcColla> gerActorColla(@RequestParam int collaTime){
 
         long start=System.currentTimeMillis();
         GetAcAcColla result=new GetAcAcColla();
@@ -42,7 +43,7 @@ public class ByColla {
         long end=System.currentTimeMillis();
         List<ViewActorActorCollaborationEntity> l=new ArrayList<>();
         for(ViewActorActorCollaborationEntity a:actorActorMovieEntities){
-            if(a.getCollaborateCount()>20){
+            if(a.getCollaborateCount()>=collaTime){
                 l.add(a);
             }
 
@@ -52,7 +53,7 @@ public class ByColla {
         return new ResponseEntity<>(result, HttpStatus.OK); }
 
     @RequestMapping(value = "count/colla/dcac",method = RequestMethod.GET)
-    public ResponseEntity<GetDcAcColla> getDicAcColla(){
+    public ResponseEntity<GetDcAcColla> getDicAcColla(@RequestParam int collaTime){
 
         GetDcAcColla result=new GetDcAcColla();
         long start=System.currentTimeMillis();
@@ -60,7 +61,7 @@ public class ByColla {
         long end=System.currentTimeMillis();
         List<ViewActorDirectorCollaborationEntity> l=new ArrayList<>();
         for(ViewActorDirectorCollaborationEntity a:viewActorDirectorCollaborationEntities){
-            if(a.getCollaborateCount()>15){
+            if(a.getCollaborateCount()>=collaTime){
                 l.add(a);
             }
         }
@@ -71,14 +72,14 @@ public class ByColla {
 
 
     @RequestMapping(value = "count/colla/dcdc",method = RequestMethod.GET)
-    public ResponseEntity<GetDcDcColla> getDicDic(){
+    public ResponseEntity<GetDcDcColla> getDicDic(@RequestParam int collaTime){
         GetDcDcColla result=new GetDcDcColla();
         long start=System.currentTimeMillis();
         List<ViewDirectorDirectorCollaborationEntity> viewDirectorDirectorCollaborationEntities = directorDirectorRepo.findAll();
         long end=System.currentTimeMillis();
         List<ViewDirectorDirectorCollaborationEntity> l=new ArrayList<>();
         for(ViewDirectorDirectorCollaborationEntity a:viewDirectorDirectorCollaborationEntities){
-            if(a.getCollaborateCount()>15){
+            if(a.getCollaborateCount()>=collaTime){
                 l.add(a);
             }
         }
