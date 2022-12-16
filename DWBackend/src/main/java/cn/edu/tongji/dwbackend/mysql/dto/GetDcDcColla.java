@@ -13,5 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 public class GetDcDcColla {
     List<ViewDirectorDirectorCollaborationEntity> data;
+    int num;
     long time;
 }

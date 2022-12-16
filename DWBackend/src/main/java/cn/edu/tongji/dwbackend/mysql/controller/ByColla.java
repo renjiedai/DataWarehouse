@@ -50,6 +50,7 @@ public class ByColla {
         }
         result.setData(l);
         result.setTime(end-start);
+        result.setNum(l.size());
         return new ResponseEntity<>(result, HttpStatus.OK); }
 
     @RequestMapping(value = "count/colla/dcac",method = RequestMethod.GET)
@@ -67,6 +68,7 @@ public class ByColla {
         }
         result.setData(l);
         result.setTime(end-start);
+        result.setNum(l.size());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
@@ -85,6 +87,7 @@ public class ByColla {
         }
         result.setData(l);
         result.setTime(end-start);
+        result.setNum(l.size());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

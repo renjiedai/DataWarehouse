@@ -16,5 +16,6 @@ import java.util.List;
 @NoArgsConstructor
 public class GetDcAcColla {
     List<ViewActorDirectorCollaborationEntity> data;
+    int num;
     long time;
 }
