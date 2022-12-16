@@ -34,7 +34,7 @@ public class ByActor {
         long start=System.currentTimeMillis();
         GetNum result=new GetNum();
         if(!isStarring){
-            List<ActorMovieEntity> actorMovieEntities = actorMovieRepository.findAllByActorName(actorName);
+            List<ActorMovieEntity> actorMovieEntities = actorMovieRepository.findAllByActorNameAndStarring(actorName,isStarring);
             result.setNum(actorMovieEntities.size());
             long end=System.currentTimeMillis();
             result.setTime(end-start);
@@ -58,10 +58,19 @@ public class ByActor {
         GetNameList result=new GetNameList();
         if(!isStarring){
             List<ActorMovieEntity> actorMovieEntities = actorMovieRepository.findAllByActorName(actorName);
+            List<ActorMovieEntity> actorMovieEntities2 = actorMovieRepository.findAllByActorNameAndStarring(actorName, isStarring);
+            List<ActorMovieEntity> r=new ArrayList<>();
+
+            for(ActorMovieEntity a:actorMovieEntities){
+                if(actorMovieEntities2.contains(a)==true    ){
+                    r.add(a);
+                }
+
+            }
             long end=System.currentTimeMillis();
             result.setTime(end-start);
             List<String> name=new ArrayList<>();
-            for(ActorMovieEntity a:actorMovieEntities){
+            for(ActorMovieEntity a:r){
                 name.add(movieRepository.findFirstByMovieId(a.getMovieId()).getMovieName());
             }
             result.setNum(name.size());
@@ -82,6 +91,8 @@ public class ByActor {
             }
             result.setNum(name.size());
             result.setData(name);
+
+
             return new ResponseEntity<>(result, HttpStatus.OK);
         }
     }
