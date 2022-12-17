@@ -109,7 +109,7 @@ export default {
                     });
                 //neo4j
                 axios
-                    .get('/dir/findtwo',
+                    .get('/director/findtwo',
                         {
                             params: {
                                 time: this.times
@@ -134,7 +134,7 @@ export default {
                     });
                 //neo4j
                 axios
-                    .get('/act/finddir',
+                    .get('/actor/finddir',
                         {
                             params: {
                                 time: this.times
@@ -159,7 +159,7 @@ export default {
                     });
                 //neo4j
                 axios
-                    .get('/act/findtwo',
+                    .get('/actor/findtwo',
                         {
                             params: {
                                 time: this.times

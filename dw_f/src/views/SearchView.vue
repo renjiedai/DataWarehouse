@@ -21,6 +21,9 @@
           <el-select v-if="entity === '导演'" v-model="standard" clearable class="m-2" placeholder="Select" size="large">
             <el-option v-for="item in dirstd" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
+          <el-select v-if="entity === '电影'" v-model="standard" clearable class="m-2" placeholder="Select" size="large">
+            <el-option v-for="item in moviestd" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
           <el-select v-else-if="entity === '演员'" v-model="standard" clearable class="m-2" placeholder="Select"
             size="large">
             <el-option v-for="item in actstd" :key="item.value" :label="item.label" :value="item.value" />
@@ -30,6 +33,24 @@
             <el-option v-for="item in scorestd" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
 
+          <div v-if="entity === '电影'" style="margin-top: 20px;">
+            <slot> 请输入电影名： </slot>
+            <el-input class="m-2" v-model="movie_name" style="width:150px;margin-left: 10px"
+            placeholder="Please input name" />
+          </div>
+
+          <div v-if="entity === '导演' && standard === '执导'" style="margin-top: 20px;">
+            <slot> 请输入导演名： </slot>
+            <el-input class="m-2" v-model="dirname" style="width:150px;margin-left: 10px"
+            placeholder="Please input name" />
+          </div>
+
+          <div v-if="entity === '演员'" style="margin-top: 20px;">
+            <slot> 请输入演员名： </slot>
+            <el-input class="m-2" v-model="actorname" style="width:150px;margin-left: 10px"
+            placeholder="Please input name" />
+          </div>
+          
           <div v-if="entity === '日期【年季】'" style="margin-top: 20px;">
             <el-input-number v-model="year" :min="1600" :max="2022" @change="handleChange" />
             <slot> 年 </slot>
@@ -60,11 +81,9 @@
             </div>
           </div>
 
-
           <el-input v-if="entity === '评分'" class="m-2" v-model="value" style="width:150px;margin-left: 10px"
-            placeholder="Please input score" />
-          <el-input v-if="entity === '导演' && standard === '执导'" class="m-2" v-model="dirname"
-            style="width:150px;margin-left: 10px" placeholder="Please input value" />
+            placeholder="Please input value" />
+
         </div>
 
         <br />
@@ -116,6 +135,7 @@ export default {
       season: "",
       dirname: "",
       actorname: "",
+      movie_name:"",
       ym: "",
       ymd1: "",
       ymd2: "",
@@ -135,6 +155,10 @@ export default {
         }
       ],
       entities: [
+        {
+          value: '电影',
+          label: '电影',
+        },
         {
           value: '导演',
           label: '导演',
@@ -164,6 +188,12 @@ export default {
         {
           value: '执导',
           label: '执导',
+        },
+      ],
+      moviestd: [
+        {
+          value: '版本数',
+          label: '版本数',
         },
       ],
       actstd: [
@@ -209,7 +239,7 @@ export default {
         case 'Mar':
           ret.push(3);
           break;
-          case 'Apr':
+        case 'Apr':
           ret.push(4);
           break;
         case 'May':
@@ -218,7 +248,7 @@ export default {
         case 'Jun':
           ret.push(6);
           break;
-          case 'Jul':
+        case 'Jul':
           ret.push(7);
           break;
         case 'Aug':
@@ -227,7 +257,7 @@ export default {
         case 'Sep':
           ret.push(9);
           break;
-          case 'Oct':
+        case 'Oct':
           ret.push(10);
           break;
         case 'Nov':
@@ -269,10 +299,35 @@ export default {
           });
         //neo4j
         axios
-          .get('/dirmovie',
+          .get('/director/dirmovie',
             {
               params: {
                 directorName: this.dirname
+              }
+            })
+          .then((res) => {
+            console.log(res);
+          });
+        //hive 【hasn't finished】
+      }
+      else if (this.entity == "电影" && this.standard == "版本数") {
+        //mysql
+        axios
+          .get('mysql/byMovieName/count/format',
+            {
+              params: {
+                movieName: this.movie_name
+              }
+            })
+          .then((res) => {
+            console.log(res);
+          });
+        //neo4j
+        axios
+          .get('/movie/byname',
+            {
+              params: {
+                name: this.movie_name
               }
             })
           .then((res) => {
@@ -296,7 +351,7 @@ export default {
             })
           //neo4j
           axios
-            .get('/starmovie',
+            .get('/actor/starmovie',
               {
                 params: {
                   actorName: this.actorname,
@@ -321,7 +376,7 @@ export default {
             })
           //neo4j
           axios
-            .get('/actmovie',
+            .get('/actor/actmovie',
               {
                 params: {
                   actorName: this.actorname,
@@ -361,7 +416,7 @@ export default {
           this.t_mysql = parseInt(time1) + parseInt(time2);
           //neo4j
           axios
-            .get('/inmovie',
+            .get('/actor/inmovie',
               {
                 params: {
                   actorName: this.actorname,
@@ -428,96 +483,96 @@ export default {
       }
       else if (this.entity == "日期【年月】") {
         console.log(this.ym);
-        var arr=this.map_helper(this.ym);
+        var arr = this.map_helper(this.ym);
         //mysql
         axios
-            .get('mysql/byTime/count/yearMonth',
-              {
-                params: {
-                  year: arr[0],
-                  month:arr[1]
-                }
-              })
-            .then((res) => {
-              console.log(res);
-            });
-          //neo4j
-          axios
-            .get('/ym',
-              {
-                params: {
-                  year: arr[0],
-                  month:arr[1]
-                }
-              })
-            .then((res) => {
-              console.log(res);
-            });
+          .get('mysql/byTime/count/yearMonth',
+            {
+              params: {
+                year: arr[0],
+                month: arr[1]
+              }
+            })
+          .then((res) => {
+            console.log(res);
+          });
+        //neo4j
+        axios
+          .get('/ym',
+            {
+              params: {
+                year: arr[0],
+                month: arr[1]
+              }
+            })
+          .then((res) => {
+            console.log(res);
+          });
         //hive
       }
       else if (this.entity == "日期【年季】") {
         //mysql
         axios
-            .get('mysql/byTime/count/yearSeason',
-              {
-                params: {
-                  year: this.year,
-                  season:this.season,
-                }
-              })
-            .then((res) => {
-              console.log(res);
-            });
-          //neo4j
-          axios
-            .get('/ys',
-              {
-                params: {
-                  year: this.year,
-                  season:this.season,
-                }
-              })
-            .then((res) => {
-              console.log(res);
-            });
+          .get('mysql/byTime/count/yearSeason',
+            {
+              params: {
+                year: this.year,
+                season: this.season,
+              }
+            })
+          .then((res) => {
+            console.log(res);
+          });
+        //neo4j
+        axios
+          .get('/ys',
+            {
+              params: {
+                year: this.year,
+                season: this.season,
+              }
+            })
+          .then((res) => {
+            console.log(res);
+          });
         //hive
       }
       else if (this.entity == "起止年月日") {
         console.log(this.ymd1);
-        var arr1=this.map_helper(this.ymd1);
-        var arr2=this.map_helper(this.ymd2);
+        var arr1 = this.map_helper(this.ymd1);
+        var arr2 = this.map_helper(this.ymd2);
         //mysql
         axios
-            .get('mysql/byTime/count/yearMonth',
-              {
-                params: {
-                  startYear: arr1[0],
-                  endYear:arr2[0],
-                  startMonth:arr1[1],
-                  endMonth:arr2[1],
-                  startDay:arr1[2],
-                  endDay:arr2[2]
-                }
-              })
-            .then((res) => {
-              console.log(res);
-            });
-          //neo4j
-          axios
-            .get('/ymd',
-              {
-                params: {
-                  startYear: arr1[0],
-                  endYear:arr2[0],
-                  startMonth:arr1[1],
-                  endMonth:arr2[1],
-                  startDay:arr1[2],
-                  endDay:arr2[2]
-                }
-              })
-            .then((res) => {
-              console.log(res);
-            });
+          .get('mysql/byTime/count/yearMonth',
+            {
+              params: {
+                startYear: arr1[0],
+                endYear: arr2[0],
+                startMonth: arr1[1],
+                endMonth: arr2[1],
+                startDay: arr1[2],
+                endDay: arr2[2]
+              }
+            })
+          .then((res) => {
+            console.log(res);
+          });
+        //neo4j
+        axios
+          .get('/ymd',
+            {
+              params: {
+                startYear: arr1[0],
+                endYear: arr2[0],
+                startMonth: arr1[1],
+                endMonth: arr2[1],
+                startDay: arr1[2],
+                endDay: arr2[2]
+              }
+            })
+          .then((res) => {
+            console.log(res);
+          });
         //hive
       }
       this.drawchart();
