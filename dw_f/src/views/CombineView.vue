@@ -55,17 +55,24 @@
                         <span style="font-size: 25px;">查询结果</span>
                     </div>
                 </template>
+                <p style="text-align:left; margin-bottom: 20px;">查询结果：{{ result }}</p>
                 <p style="text-align:left; margin-bottom: 20px;">查询用时</p>
                 <p style="text-align:left; margin-bottom: 20px;">mysql : {{ t_mysql }}</p>
                 <p style="text-align:left; margin-bottom: 20px;">hive : {{ t_hive }}</p>
                 <p style="text-align:left; margin-bottom: 50px;">neo4j : {{ t_neo4j }}</p>
                 <div id="chart1" style="width: 600px;height:400px;"></div>
-                <div>
-                    <p style="text-align:left; margin-bottom: 20px;">查询结果</p>
+                <div v-if="type === '组合1'">
+                    <!-- <p style="text-align:left; margin-bottom: 20px;">查询结果详情</p>
                     <el-table :data="pairs" height="250" style="width: 100%">
                         <el-table-column prop="name1" label="Name1" width="180" />
                         <el-table-column prop="name2" label="Name2" width="180" />
                         <el-table-column prop="collaborateCount" label="CollaborateCount" width="180" />
+                    </el-table> -->
+                </div>
+                <div v-else>
+                    <p style="text-align:left; margin-bottom: 20px;">查询结果详情</p>
+                    <el-table :data="movies" height="250" style="width: 100%">
+                        <el-table-column prop="movie" label="Movie" />
                     </el-table>
                 </div>
             </el-card>
@@ -90,14 +97,16 @@ export default {
             t_neo4j: "",
             type: "",
             times: "",
-            dir_name:"",
-            type_name:"",
-            num:"",
-            year1:"",
-            year2:"",
-            star_name:"",
-            score:"",
+            dir_name: "",
+            type_name: "",
+            num: "",
+            year1: "",
+            year2: "",
+            star_name: "",
+            score: "",
+            result: "",
             pairs: [], //the couple name and numcount
+            movies: [],
             options: [
                 {
                     value: '组合1',
@@ -130,39 +139,56 @@ export default {
 
         search() {
             if (this.type == "组合1") {
-                // //mysql
-                // axios
-                //     .get('mysql/byColla/count/colla/dcdc',
-                //         {
-                //             params: {
-                //                 collaTime: this.times
-                //             }
-                //         })
-                //     .then((res) => {
-                //         console.log(res);
-                //     });
-                // //neo4j
-                // axios
-                //     .get('/director/findtwo',
-                //         {
-                //             params: {
-                //                 time: this.times
-                //             }
-                //         })
-                //     .then((res) => {
-                //         console.log(res);
-                //     });
-                // //hive 【hasn't finished】
+                //mysql
+                axios
+                    .get('http://localhost:3445/mysql/combine/list/type',
+                        {
+                            params: {
+                                type: this.type_name
+                            }
+                        })
+                    .then((res) => {
+                        console.log(res);
+                        this.t_mysql = res.data;
+                        //neo4j
+                        axios
+                            .get('http://localhost:3445/',
+                                {
+                                    params: {
+                                        time: this.times
+                                    }
+                                })
+                            .then((res) => {
+                                console.log(res);
+                                this.t_neo4j = res.data;
+                                //hive 【hasn't finished】
+                                axios
+                                    .get('http://47.101.153.105:8100/spark/combine/list/type',
+                                        {
+                                            params: {
+                                                type: this.type_name
+                                            }
+                                        })
+                                    .then((res) => {
+                                        console.log(res);
+                                        
+                                        this.t_hive = parseInt(res.data.time*1000);
+                                        this.result = res.data.actors;
+
+                                        this.drawchart();
+                                    });
+                            });
+                    });
             }
             else if (this.type == "组合2") {
                 //mysql
                 axios
-                    .get('mysql/combine/list/rate',
+                    .get('http://localhost:3445/mysql/combine/list/rate',
                         {
                             params: {
                                 directorName: this.dir_name,
-                                type:this.type_name,
-                                rate:this.value,
+                                type: this.type_name,
+                                rate: this.value,
                             }
                         })
                     .then((res) => {
@@ -174,8 +200,8 @@ export default {
                         {
                             params: {
                                 directorName: this.dir_name,
-                                type:this.type_name,
-                                rate:this.value,
+                                type: this.type_name,
+                                rate: this.value,
                             }
                         })
                     .then((res) => {
@@ -190,9 +216,9 @@ export default {
                         {
                             params: {
                                 start: this.year1,
-                                end:this.year2,
-                                name:this.star_name,
-                                score:this.score
+                                end: this.year2,
+                                name: this.star_name,
+                                score: this.score
                             }
                         })
                     .then((res) => {
@@ -204,9 +230,9 @@ export default {
                         {
                             params: {
                                 start: this.year1,
-                                end:this.year2,
-                                name:this.star_name,
-                                score:this.score
+                                end: this.year2,
+                                name: this.star_name,
+                                score: this.score
                             }
                         })
                     .then((res) => {

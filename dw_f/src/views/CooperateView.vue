@@ -31,17 +31,34 @@
                         <span style="font-size: 25px;">查询结果</span>
                     </div>
                 </template>
+                <p style="text-align:left; margin-bottom: 20px;">查询结果：{{ result }}</p>
                 <p style="text-align:left; margin-bottom: 20px;">查询用时</p>
                 <p style="text-align:left; margin-bottom: 20px;">mysql : {{ t_mysql }}</p>
                 <p style="text-align:left; margin-bottom: 20px;">hive : {{ t_hive }}</p>
                 <p style="text-align:left; margin-bottom: 50px;">neo4j : {{ t_neo4j }}</p>
                 <div id="chart1" style="width: 600px;height:400px;"></div>
-                <div>
+                <div v-if="type1 === '导演' && type2 === '导演'">
                     <p style="text-align:left; margin-bottom: 20px;">查询结果</p>
                     <el-table :data="pairs" height="250" style="width: 100%">
-                        <el-table-column prop="name1" label="Name1" width="180" />
-                        <el-table-column prop="name2" label="Name2" width="180" />
-                        <el-table-column prop="collaborateCount" label="CollaborateCount" width="180" />
+                        <el-table-column prop="directorName1" label="Director1" />
+                        <el-table-column prop="directorName2" label="Director2" />
+                        <el-table-column prop="collaborateCount" label="CollaborateCount" />
+                    </el-table>
+                </div>
+                <div v-else-if="type1 === '演员' && type2 === '演员'">
+                    <p style="text-align:left; margin-bottom: 20px;">查询结果</p>
+                    <el-table :data="pairs" height="250" style="width: 100%">
+                        <el-table-column prop="actorName1" label="Actor1" />
+                        <el-table-column prop="actorName2" label="Actor2" />
+                        <el-table-column prop="collaborateCount" label="CollaborateCount" />
+                    </el-table>
+                </div>
+                <div v-else>
+                    <p style="text-align:left; margin-bottom: 20px;">查询结果</p>
+                    <el-table :data="pairs" height="250" style="width: 100%">
+                        <el-table-column prop="directorName" label="Director" />
+                        <el-table-column prop="actorName" label="Actor" />
+                        <el-table-column prop="collaborateCount" label="CollaborateCount" />
                     </el-table>
                 </div>
             </el-card>
@@ -67,6 +84,7 @@ export default {
             type1: "",
             type2: "",
             times: "",
+            result: "",
             pairs: [], //the couple name and numcount
             options: [
                 {
@@ -98,7 +116,7 @@ export default {
             if (this.type1 == "导演" && this.type2 == "导演") {
                 //mysql
                 axios
-                    .get('mysql/byColla/count/colla/dcdc',
+                    .get('http://localhost:3445/mysql/byColla/count/colla/dcdc',
                         {
                             params: {
                                 collaTime: this.times
@@ -106,24 +124,32 @@ export default {
                         })
                     .then((res) => {
                         console.log(res);
+                        this.t_mysql = res.data.time;
+                        this.result = res.data.num;
+                        this.pairs = res.data.data;
+                        //neo4j
+                        axios
+                            .get('http://localhost:3445//director/findtwo',
+                                {
+                                    params: {
+                                        time: this.times
+                                    }
+                                })
+                            .then((res) => {
+                                console.log(res);
+                                this.t_neo4j = res.data;
+
+                                //hive 【hasn't finished】
+                                this.drawchart();
+                            });
+
                     });
-                //neo4j
-                axios
-                    .get('/director/findtwo',
-                        {
-                            params: {
-                                time: this.times
-                            }
-                        })
-                    .then((res) => {
-                        console.log(res);
-                    });
-                //hive 【hasn't finished】
+
             }
             else if ((this.type1 == "导演" && this.type2 == "演员") || (this.type1 == '演员' && this.type2 == '导演')) {
                 //mysql
                 axios
-                    .get('mysql/byColla/count/colla/dcac',
+                    .get('http://localhost:3445/mysql/byColla/count/colla/dcac',
                         {
                             params: {
                                 collaTime: this.times
@@ -131,24 +157,32 @@ export default {
                         })
                     .then((res) => {
                         console.log(res);
+                        this.t_mysql = res.data.time;
+                        this.result = res.data.num;
+                        this.pairs = res.data.data;
+                        //neo4j
+                        axios
+                            .get('http://localhost:3445/actor/finddir',
+                                {
+                                    params: {
+                                        time: this.times
+                                    }
+                                })
+                            .then((res) => {
+                                console.log(res);
+                                this.t_neo4j = res.data;
+
+                                //hive 【hasn't finished】
+                                this.drawchart();
+                            });
+                        //hive 【hasn't finished】
                     });
-                //neo4j
-                axios
-                    .get('/actor/finddir',
-                        {
-                            params: {
-                                time: this.times
-                            }
-                        })
-                    .then((res) => {
-                        console.log(res);
-                    });
-                //hive 【hasn't finished】
+
             }
             else if (this.type1 == '演员' && this.type2 == '演员') {
                 //mysql
                 axios
-                    .get('mysql/byColla/count/acac',
+                    .get('http://localhost:3445/mysql/byColla/count/acac',
                         {
                             params: {
                                 collaTime: this.times
@@ -156,19 +190,27 @@ export default {
                         })
                     .then((res) => {
                         console.log(res);
+                        this.t_mysql = res.data.time;
+                        this.result = res.data.num;
+                        this.pairs = res.data.data;
+
+                        //neo4j
+                        axios
+                            .get('http://localhost:3445/actor/findtwo',
+                                {
+                                    params: {
+                                        time: this.times
+                                    }
+                                })
+                            .then((res) => {
+                                console.log(res);
+                                this.t_neo4j = res.data;
+                                //hive 【hasn't finished】
+
+                                this.drawchart();
+                            });
                     });
-                //neo4j
-                axios
-                    .get('/actor/findtwo',
-                        {
-                            params: {
-                                time: this.times
-                            }
-                        })
-                    .then((res) => {
-                        console.log(res);
-                    });
-                //hive 【hasn't finished】
+
             }
             this.drawchart();
         },

@@ -277,7 +277,7 @@ export default {
       if (this.entity == "导演" && this.standard == "执导") {
         //mysql
         axios
-          .get('mysql/byDirector/count/movie',
+          .get('http://localhost:3445/mysql/byDirector/count/movie',
             {
               params: {
                 directorName: this.dirname
@@ -288,7 +288,7 @@ export default {
             this.t_mysql = res.data.time;
             //neo4j
             axios
-              .get('/director/dirmovie',
+              .get('http://localhost:3445/director/dirmovie',
                 {
                   params: {
                     directorName: this.dirname
@@ -308,7 +308,7 @@ export default {
       else if (this.entity == "电影" && this.standard == "版本数") {
         //mysql
         axios
-          .get('mysql/byMovieName/count/format',
+          .get('http://localhost:3445/mysql/byMovieName/count/format',
             {
               params: {
                 movieName: this.movie_name
@@ -320,7 +320,7 @@ export default {
             this.result = res.data.num;
             //neo4j
             axios
-              .get('/movie/byname',
+              .get('http://localhost:3445/movie/byname',
                 {
                   params: {
                     name: this.movie_name
@@ -342,7 +342,7 @@ export default {
         if (this.standard == "主演") {
           //mysql
           axios
-            .get('mysql/byActor/count/movie',
+            .get('http://localhost:3445/mysql/byActor/count/movie',
               {
                 params: {
                   actorName: this.actorname,
@@ -356,7 +356,7 @@ export default {
 
               //neo4j
               axios
-                .get('/actor/starmovie',
+                .get('http://localhost:3445/actor/starmovie',
                   {
                     params: {
                       actorName: this.actorname,
@@ -375,7 +375,7 @@ export default {
         else if (this.standard == "非主演") {
           //mysql
           axios
-            .get('mysql/byActor/count/movie',
+            .get('http://localhost:3445/mysql/byActor/count/movie',
               {
                 params: {
                   actorName: this.actorname,
@@ -389,7 +389,7 @@ export default {
 
               //neo4j
               axios
-                .get('/actor/actmovie',
+                .get('http://localhost:3445/actor/actmovie',
                   {
                     params: {
                       actorName: this.actorname,
@@ -410,7 +410,7 @@ export default {
           var time1, time2;
           var result1, result2;
           axios
-            .get('mysql/byActor/count/movie',
+            .get('http://localhost:3445/mysql/byActor/count/movie',
               {
                 params: {
                   actorName: this.actorname,
@@ -422,7 +422,7 @@ export default {
               time1 = res.data.time;
               result1 = res.data.num;
               axios
-                .get('mysql/byActor/count/movie',
+                .get('http://localhost:3445/mysql/byActor/count/movie',
                   {
                     params: {
                       actorName: this.actorname,
@@ -438,7 +438,7 @@ export default {
 
                   //neo4j
                   axios
-                    .get('/actor/inmovie',
+                    .get('http://localhost:3445/actor/inmovie',
                       {
                         params: {
                           actorName: this.actorname,
@@ -459,7 +459,7 @@ export default {
         if (this.standard == "分数大于等于") {
           //mysql
           axios
-            .get('mysql/byComment/score',
+            .get('http://localhost:3445/mysql/byComment/score',
               {
                 params: {
                   score: this.value
@@ -480,7 +480,7 @@ export default {
               console.log(this.movies);
               //neo4j
               axios
-                .get('/movie/score',
+                .get('http://localhost:3445/movie/score',
                   {
                     params: {
                       value: this.value
@@ -499,7 +499,7 @@ export default {
         else if (this.standard == "好评率大于等于") {
           //mysql
           axios
-            .get('mysql/byComment/rate',
+            .get('http://localhost:3445/mysql/byComment/rate',
               {
                 params: {
                   rate: parseInt(this.value)
@@ -507,7 +507,7 @@ export default {
               })
             .then((res) => {
               console.log(res);
-              this.t_mysql=res.data.time;
+              this.t_mysql = res.data.time;
               var values = res.data.data;
               var fi = [];
               for (var i = 0; i < values.length; i++) {
@@ -518,7 +518,7 @@ export default {
 
               //neo4j
               axios
-                .get('/movie/posrate',
+                .get('http://localhost:3445/movie/posrate',
                   {
                     params: {
                       value: this.value
@@ -537,38 +537,48 @@ export default {
 
       }
       else if (this.entity == "日期【年月】") {
-        console.log(this.ym);
-        var arr = this.map_helper(this.ym);
+        var y = this.ym.getFullYear();
+        var m = this.ym.getMonth() + 1;
         //mysql
         axios
-          .get('mysql/byTime/count/yearMonth',
+          .get('http://localhost:3445/mysql/byTime/count/yearMonth',
             {
               params: {
-                year: arr[0],
-                month: arr[1]
+                year: y,
+                month: m
               }
             })
           .then((res) => {
             console.log(res);
+            this.t_mysql = res.data.time;
+            this.result = res.data.num;
+
+            //neo4j
+            axios
+              .get('http://localhost:3445/movie/ym',
+                {
+                  params: {
+                    year: y,
+                    month: m
+                  }
+                })
+              .then((res) => {
+                console.log(res);
+                this.t_neo4j = res.data;
+
+                //hive
+
+                this.drawchart();
+              });
+
+
           });
-        //neo4j
-        axios
-          .get('/ym',
-            {
-              params: {
-                year: arr[0],
-                month: arr[1]
-              }
-            })
-          .then((res) => {
-            console.log(res);
-          });
-        //hive
+
       }
       else if (this.entity == "日期【年季】") {
         //mysql
         axios
-          .get('mysql/byTime/count/yearSeason',
+          .get('http://localhost:3445/mysql/byTime/count/yearSeason',
             {
               params: {
                 year: this.year,
@@ -577,60 +587,82 @@ export default {
             })
           .then((res) => {
             console.log(res);
+            this.t_mysql = res.data.time;
+            this.result = res.data.num;
+
+            //neo4j
+            axios
+              .get('http://localhost:3445/movie/ys',
+                {
+                  params: {
+                    year: this.year,
+                    season: this.season,
+                  }
+                })
+              .then((res) => {
+                console.log(res);
+                this.t_neo4j = res.data;
+
+                //hive
+
+                this.drawchart();
+              });
+
           });
-        //neo4j
-        axios
-          .get('/ys',
-            {
-              params: {
-                year: this.year,
-                season: this.season,
-              }
-            })
-          .then((res) => {
-            console.log(res);
-          });
-        //hive
+
       }
       else if (this.entity == "起止年月日") {
         console.log(this.ymd1);
-        var arr1 = this.map_helper(this.ymd1);
-        var arr2 = this.map_helper(this.ymd2);
+        var y1=this.ymd1.getFullYear();
+        var y2=this.ymd2.getFullYear();
+        var m1=this.ymd1.getMonth()+1;
+        var m2=this.ymd2.getMonth()+1;
+        var d1=this.ymd1.getDate();
+        var d2=this.ymd2.getDate();
+
+        var s1=y1+"-"+m1+"-"+d1;
+        var s2=y2+"-"+m2+"-"+d2;
+
         //mysql
         axios
-          .get('mysql/byTime/count/yearMonth',
+          .get('http://localhost:3445/mysql/byTime/count/yearMonthDay',
             {
               params: {
-                startYear: arr1[0],
-                endYear: arr2[0],
-                startMonth: arr1[1],
-                endMonth: arr2[1],
-                startDay: arr1[2],
-                endDay: arr2[2]
+                start:s1,
+                end:s2
               }
             })
           .then((res) => {
             console.log(res);
+            this.t_mysql = res.data.time;
+            this.result = res.data.num;
+
+            //neo4j
+            axios
+              .get('http://localhost:3445/movie/ymd',
+                {
+                  params: {
+                    startYear: y1,
+                    endYear: y2,
+                    startMonth: m1,
+                    endMonth: m2,
+                    startDay: d1,
+                    endDay: d2
+                  }
+                })
+              .then((res) => {
+                console.log(res);
+                this.t_neo4j=res.data;
+
+                //hive
+
+                this.drawchart();
+              });
+
           });
-        //neo4j
-        axios
-          .get('/ymd',
-            {
-              params: {
-                startYear: arr1[0],
-                endYear: arr2[0],
-                startMonth: arr1[1],
-                endMonth: arr2[1],
-                startDay: arr1[2],
-                endDay: arr2[2]
-              }
-            })
-          .then((res) => {
-            console.log(res);
-          });
-        //hive
+
       }
-      //this.drawchart();
+
     },
 
     drawchart() {
