@@ -6,7 +6,8 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://localhost:3445/'
+axios.defaults.baseURL = 'http://localhost:3445'
+
 
 createApp(App)
     .use(router)

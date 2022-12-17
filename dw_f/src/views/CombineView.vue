@@ -14,6 +14,13 @@
                     </el-select>
                 </div>
 
+                <div v-if="type === '组合1'" style="margin-top: 20px;">
+                    <slot> 要拍一部 </slot>
+                    <el-input class="m-2" v-model="type_name" style="width:150px; margin-right: 10px;"
+                        placeholder="Please input type" />
+                    <slot> 类型的电影，最受关注的演员组合是 </slot>
+                </div>
+
                 <div v-if="type === '组合2'" style="margin-top: 20px;">
                     <slot> 导演：</slot>
                     <el-input class="m-2" v-model="dir_name" style="width:150px; margin-right: 10px;"
