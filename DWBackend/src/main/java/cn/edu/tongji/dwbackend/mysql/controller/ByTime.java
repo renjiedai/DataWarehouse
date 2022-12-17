@@ -2,6 +2,8 @@ package cn.edu.tongji.dwbackend.mysql.controller;
 
 import cn.edu.tongji.dwbackend.mysql.dto.GetNum;
 import cn.edu.tongji.dwbackend.mysql.entity.TimeEntity;
+import cn.edu.tongji.dwbackend.mysql.entity.TimeMovieEntity;
+import cn.edu.tongji.dwbackend.mysql.repository.TimeMovieRepo;
 import cn.edu.tongji.dwbackend.mysql.repository.TimeRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,9 @@ import java.util.List;
 public class ByTime {
     @Resource
     TimeRepository timeRepository;
+    @Resource
+    TimeMovieRepo timeMovieRepo;
+
     @RequestMapping(value = "count/yearMonth",method = RequestMethod.GET)
     public ResponseEntity<GetNum> getTimeByYearAndMonth(@RequestParam(value = "year")Integer year, @RequestParam(value = "month")Integer month){
         System.out.println(year);
@@ -61,12 +66,13 @@ public class ByTime {
         Date startT=Date.valueOf(start);
         Date endT=Date.valueOf(end);
         int i=0;
-        List<TimeEntity> timeEntities = timeRepository.findAll();
-        for(TimeEntity t:timeEntities){
-            if(t.getReleaseTime().compareTo(startT)>=0&&t.getReleaseTime().compareTo(endT)<=0){
-                i++;
+        List<TimeMovieEntity> timeEntities = timeMovieRepo.findAll();
+        for(TimeMovieEntity t:timeEntities){
+            if(t.getReleaseTime()!=null){
+                if(t.getReleaseTime().compareTo(startT)>=0&&t.getReleaseTime().compareTo(endT)<=0){
+                    i++;
+                }
             }
-
         }
         System.out.println(timeEntities.size());
         result.setNum(i);
