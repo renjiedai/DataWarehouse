@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.sql.Date;
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.List;
 
 @RestController
@@ -51,48 +53,25 @@ public class ByTime {
 
 
     @RequestMapping(value = "count/yearMonthDay",method = RequestMethod.GET)
-    public ResponseEntity<GetNum> getTimeByYearMonthDay(@RequestParam Integer startYear, @RequestParam Integer endYear
-                                                         ,@RequestParam Integer startMonth, @RequestParam Integer endMonth,
-                                                        @RequestParam Integer startDay, @RequestParam Integer endDay){
+    public ResponseEntity<GetNum> getTimeByYearMonthDay(@RequestParam String start, @RequestParam String end){
 
-        long start=System.currentTimeMillis();
+        long startTime=System.currentTimeMillis();
         GetNum result=new GetNum();
 
+        Date startT=Date.valueOf(start);
+        Date endT=Date.valueOf(end);
         int i=0;
         List<TimeEntity> timeEntities = timeRepository.findAll();
         for(TimeEntity t:timeEntities){
-            if(t.getYear()>startYear&&t.getYear()<endYear){
+            if(t.getReleaseTime().compareTo(startT)>=0&&t.getReleaseTime().compareTo(endT)<=0){
                 i++;
-                continue;
             }
-            if(t.getYear()==startYear){
-                if(t.getMonth()>startMonth){
-                    i++;
-                    continue;
-                }
-                if(t.getMonth()==startMonth){
-                    if(t.getDay()>=startDay){
-                        i++;
-                        continue;
-                    }
-                }
-            }
-            if(t.getYear()==endYear){
-                if(t.getMonth()<endMonth){
-                    i++;
-                    continue;
-                }
-                if(t.getMonth()==endMonth){
-                    if(t.getDay()<=endDay){
-                        i++;
-                    }
-                }
-            }
+
         }
         System.out.println(timeEntities.size());
         result.setNum(i);
-        long end=System.currentTimeMillis();
-        result.setTime(end-start);
+        long endTime=System.currentTimeMillis();
+        result.setTime(endTime-startTime);
         return new ResponseEntity<>(result, HttpStatus.OK);
 
     }
