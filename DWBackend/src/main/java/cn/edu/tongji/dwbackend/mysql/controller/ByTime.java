@@ -1,8 +1,10 @@
 package cn.edu.tongji.dwbackend.mysql.controller;
 
 import cn.edu.tongji.dwbackend.mysql.dto.GetNum;
+import cn.edu.tongji.dwbackend.mysql.entity.MovieEntity;
 import cn.edu.tongji.dwbackend.mysql.entity.TimeEntity;
 import cn.edu.tongji.dwbackend.mysql.entity.TimeMovieEntity;
+import cn.edu.tongji.dwbackend.mysql.repository.MovieRepository;
 import cn.edu.tongji.dwbackend.mysql.repository.TimeMovieRepo;
 import cn.edu.tongji.dwbackend.mysql.repository.TimeRepository;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,9 @@ public class ByTime {
     TimeRepository timeRepository;
     @Resource
     TimeMovieRepo timeMovieRepo;
+
+    @Resource
+    MovieRepository movieRepository;
 
     @RequestMapping(value = "count/yearMonth",method = RequestMethod.GET)
     public ResponseEntity<GetNum> getTimeByYearAndMonth(@RequestParam(value = "year")Integer year, @RequestParam(value = "month")Integer month){
@@ -66,8 +71,9 @@ public class ByTime {
         Date startT=Date.valueOf(start);
         Date endT=Date.valueOf(end);
         int i=0;
-        List<TimeMovieEntity> timeEntities = timeMovieRepo.findAll();
-        for(TimeMovieEntity t:timeEntities){
+
+        List<MovieEntity> timeEntities = movieRepository.findAll();
+        for(MovieEntity t:timeEntities){
             if(t.getReleaseTime()!=null){
                 if(t.getReleaseTime().compareTo(startT)>=0&&t.getReleaseTime().compareTo(endT)<=0){
                     i++;
