@@ -150,12 +150,13 @@ export default {
                     .then((res) => {
                         console.log(res);
                         this.t_mysql = res.data;
+                        this.t_hive = parseInt(1000);
                         //neo4j
                         axios
-                            .get('http://localhost:3445/',
+                            .get('http://localhost:3445/combine/typepair',
                                 {
                                     params: {
-                                        time: this.times
+                                        type: this.type_name
                                     }
                                 })
                             .then((res) => {
@@ -171,8 +172,8 @@ export default {
                                         })
                                     .then((res) => {
                                         console.log(res);
-                                        
-                                        this.t_hive = parseInt(res.data.time*1000);
+
+                                        this.t_hive = parseInt(res.data.time * 1000);
                                         this.result = res.data.actors;
 
                                         this.drawchart();
@@ -196,7 +197,7 @@ export default {
                     });
                 //neo4j
                 axios
-                    .get('',
+                    .get('http://localhost:3445/',
                         {
                             params: {
                                 directorName: this.dir_name,
@@ -212,7 +213,7 @@ export default {
             else if (this.type == "组合3") {
                 //mysql
                 axios
-                    .get('mysql/combine/list/score',
+                    .get('http://localhost:3445/mysql/combine/list/score',
                         {
                             params: {
                                 start: this.year1,
