@@ -33,8 +33,30 @@ public class ByColla {
     @Resource
     ActorDirectoRepo actorDirectoRepo;
 
+    static private boolean acac_exist(List<ViewActorActorCollaborationEntity> v,ViewActorActorCollaborationEntity item){
+        for(ViewActorActorCollaborationEntity i:v ){
+            if(i.getActorName1()==item.getActorName2()&&i.getActorName2()== item.getActorName1()){
+                return true;
+            }
+        }
+        return false;
+    }
+    static private boolean dcdc_exist(List<ViewDirectorDirectorCollaborationEntity> v,ViewDirectorDirectorCollaborationEntity item){
+        for(ViewDirectorDirectorCollaborationEntity i:v ){
+            if(i.getDirectorName1()== item.getDirectorName2()&&i.getDirectorName2()== item.getDirectorName1()){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+
+
+
     @RequestMapping(value = "count/acac",method = RequestMethod.GET)
-    public ResponseEntity<GetAcAcColla> gerActorColla(@RequestParam int collaTime){
+    public ResponseEntity<GetAcAcColla> getActorColla(@RequestParam int collaTime){
 
         long start=System.currentTimeMillis();
         GetAcAcColla result=new GetAcAcColla();
@@ -43,7 +65,7 @@ public class ByColla {
         long end=System.currentTimeMillis();
         List<ViewActorActorCollaborationEntity> l=new ArrayList<>();
         for(ViewActorActorCollaborationEntity a:actorActorMovieEntities){
-            if(a.getCollaborateCount()>=collaTime){
+            if(a.getCollaborateCount()>=collaTime&&acac_exist(l,a)==false){
                 l.add(a);
             }
 
@@ -81,7 +103,7 @@ public class ByColla {
         long end=System.currentTimeMillis();
         List<ViewDirectorDirectorCollaborationEntity> l=new ArrayList<>();
         for(ViewDirectorDirectorCollaborationEntity a:viewDirectorDirectorCollaborationEntities){
-            if(a.getCollaborateCount()>=collaTime){
+            if(a.getCollaborateCount()>=collaTime&&dcdc_exist(l,a)==false){
                 l.add(a);
             }
         }
