@@ -299,9 +299,23 @@ export default {
                 console.log(res.data);
                 this.t_neo4j = parseInt(res.data);
                 console.log(this.t_neo4j);
+
                 //hive还没写
-                this.t_hive = 50;
-                this.drawchart();
+                axios
+                  .get('http://47.101.153.105:8100/spark/byDirector/count/movie',
+                    {
+                      params: {
+                        directorName: this.dirname
+                      }
+                    })
+                  .then((res) => {
+                    console.log(res);
+
+                    this.t_hive = parseInt(res.data.time * 1000);
+
+
+                    this.drawchart();
+                  });
               });
           });
       }
@@ -331,8 +345,22 @@ export default {
                 this.t_neo4j = res.data;
 
                 //hive 【hasn't finished】
-                this.t_hive = 50;
-                this.drawchart();
+
+                axios
+                  .get('http://47.101.153.105:8100/spark/byMovieName/count/format',
+                    {
+                      params: {
+                        name: this.movie_name
+                      }
+                    })
+                  .then((res) => {
+                    console.log(res);
+
+                    this.t_hive = parseInt(res.data.time * 1000);
+
+
+                    this.drawchart();
+                  });
               });
 
           });
@@ -367,7 +395,22 @@ export default {
                   this.t_neo4j = res.data;
 
                   //hive
-                  this.drawchart();
+                  axios
+                    .get('http://47.101.153.105:8100/spark/byActor/count/movie',
+                      {
+                        params: {
+                          actorName: this.actorname,
+                          isStarring: true, //not sure about the meaning of the value
+                        }
+                      })
+                    .then((res) => {
+                      console.log(res);
+
+                      this.t_hive = parseInt(res.data.time * 1000);
+
+
+                      this.drawchart();
+                    });
                 })
             })
 
@@ -400,14 +443,29 @@ export default {
                   this.t_neo4j = res.data;
 
                   //hive
-                  this.drawchart();
+                  axios
+                    .get('http://47.101.153.105:8100/spark/byActor/count/movie',
+                      {
+                        params: {
+                          actorName: this.actorname,
+                          isStarring: false, //not sure about the meaning of the value
+                        }
+                      })
+                    .then((res) => {
+                      console.log(res);
+
+                      this.t_hive = parseInt(res.data.time * 1000);
+
+
+                      this.drawchart();
+                    });
                 })
             })
 
         }
         else if (this.standard == "参演") {
           //mysql
-          var time1, time2;
+          var time1, time2, time3, time4;
           var result1, result2;
           axios
             .get('http://localhost:3445/mysql/byActor/count/movie',
@@ -449,7 +507,37 @@ export default {
                       this.t_neo4j = res.data;
 
                       //hive
-                      this.drawchart();
+                      axios
+                        .get('http://47.101.153.105:8100/spark/byActor/count/movie',
+                          {
+                            params: {
+                              actorName: this.actorname,
+                              isStarring: false, //not sure about the meaning of the value
+                            }
+                          })
+                        .then((res) => {
+                          console.log(res);
+
+                          time3 = parseInt(res.data.time * 1000);
+
+
+                          axios
+                            .get('http://47.101.153.105:8100/spark/byActor/count/movie',
+                              {
+                                params: {
+                                  actorName: this.actorname,
+                                  isStarring: true, //not sure about the meaning of the value
+                                }
+                              })
+                            .then((res) => {
+                              console.log(res);
+                              time4 = parseInt(res.data.time * 1000);
+                              this.t_hive = time3 + time4
+
+
+                              this.drawchart();
+                            });
+                        });
                     })
                 })
             })
@@ -491,8 +579,21 @@ export default {
                   this.t_neo4j = res.data;
 
                   //hive
-                  this.t_hive = 50;
-                  this.drawchart();
+                  axios
+                    .get('http://47.101.153.105:8100/spark/byComment/score',
+                      {
+                        params: {
+                          score: this.value
+                        }
+                      })
+                    .then((res) => {
+                      console.log(res);
+                      this.t_hive = parseInt(res.data.time * 1000);
+
+
+
+                      this.drawchart();
+                    });
                 });
             });
         }
@@ -529,7 +630,21 @@ export default {
                   this.t_neo4j = res.data;
 
                   //hive
-                  this.drawchart();
+                  axios
+                    .get('http://47.101.153.105:8100/spark/byComment/rate',
+                      {
+                        params: {
+                          rate: parseInt(this.value)
+                        }
+                      })
+                    .then((res) => {
+                      console.log(res);
+                      this.t_hive = parseInt(res.data.time * 1000);
+
+
+
+                      this.drawchart();
+                    });
                 });
             });
 
@@ -568,7 +683,23 @@ export default {
 
                 //hive
 
-                this.drawchart();
+                //hive
+                axios
+                  .get('http://47.101.153.105:8100/spark/byTime/count/yearMonth',
+                    {
+                      params: {
+                        year: y,
+                        month: m
+                      }
+                    })
+                  .then((res) => {
+                    console.log(res);
+                    this.t_hive = parseInt(res.data.time * 1000);
+
+
+
+                    this.drawchart();
+                  });
               });
 
 
@@ -605,7 +736,22 @@ export default {
 
                 //hive
 
-                this.drawchart();
+                axios
+                  .get('http://47.101.153.105:8100/spark/byTime/count/yearSeason',
+                    {
+                      params: {
+                        year: this.year,
+                        season: this.season,
+                      }
+                    })
+                  .then((res) => {
+                    console.log(res);
+                    this.t_hive = parseInt(res.data.time * 1000);
+
+
+
+                    this.drawchart();
+                  });
               });
 
           });
@@ -613,23 +759,23 @@ export default {
       }
       else if (this.entity == "起止年月日") {
         console.log(this.ymd1);
-        var y1=this.ymd1.getFullYear();
-        var y2=this.ymd2.getFullYear();
-        var m1=this.ymd1.getMonth()+1;
-        var m2=this.ymd2.getMonth()+1;
-        var d1=this.ymd1.getDate();
-        var d2=this.ymd2.getDate();
+        var y1 = this.ymd1.getFullYear();
+        var y2 = this.ymd2.getFullYear();
+        var m1 = this.ymd1.getMonth() + 1;
+        var m2 = this.ymd2.getMonth() + 1;
+        var d1 = this.ymd1.getDate();
+        var d2 = this.ymd2.getDate();
 
-        var s1=y1+"-"+m1+"-"+d1;
-        var s2=y2+"-"+m2+"-"+d2;
+        var s1 = y1 + "-" + m1 + "-" + d1;
+        var s2 = y2 + "-" + m2 + "-" + d2;
 
         //mysql
         axios
           .get('http://localhost:3445/mysql/byTime/count/yearMonthDay',
             {
               params: {
-                start:s1,
-                end:s2
+                start: s1,
+                end: s2
               }
             })
           .then((res) => {
@@ -652,11 +798,26 @@ export default {
                 })
               .then((res) => {
                 console.log(res);
-                this.t_neo4j=res.data;
+                this.t_neo4j = res.data;
 
                 //hive
 
-                this.drawchart();
+                axios
+                  .get('http://47.101.153.105:8100/spark/byTime/count/yearMonthDay',
+                    {
+                      params: {
+                        start: s1,
+                        end: s2
+                      }
+                    })
+                  .then((res) => {
+                    console.log(res);
+                    this.t_hive = parseInt(res.data.time * 1000);
+
+
+
+                    this.drawchart();
+                  });
               });
 
           });

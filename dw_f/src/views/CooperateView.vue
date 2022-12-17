@@ -127,9 +127,11 @@ export default {
                         this.t_mysql = res.data.time;
                         this.result = res.data.num;
                         this.pairs = res.data.data;
+
+
                         //neo4j
                         axios
-                            .get('http://localhost:3445//director/findtwo',
+                            .get('http://localhost:3445/director/findtwo',
                                 {
                                     params: {
                                         time: this.times
@@ -139,8 +141,23 @@ export default {
                                 console.log(res);
                                 this.t_neo4j = res.data;
 
+
                                 //hive 【hasn't finished】
-                                this.drawchart();
+                                axios
+                                    .get('http://47.101.153.105:8100/spark/byColla/count/colla/dcdc',
+                                        {
+                                            params: {
+                                                collaTime: this.times
+                                            }
+                                        })
+                                    .then((res) => {
+                                        console.log(res);
+
+                                        this.t_hive = parseInt(res.data.time * 1000);
+
+
+                                        this.drawchart();
+                                    });
                             });
 
                     });
@@ -173,7 +190,21 @@ export default {
                                 this.t_neo4j = res.data;
 
                                 //hive 【hasn't finished】
-                                this.drawchart();
+                                axios
+                                    .get('http://47.101.153.105:8100/spark/byColla/count/colla/dcac',
+                                        {
+                                            params: {
+                                                collaTime: this.times
+                                            }
+                                        })
+                                    .then((res) => {
+                                        console.log(res);
+
+                                        this.t_hive = parseInt(res.data.time * 1000);
+
+
+                                        this.drawchart();
+                                    });
                             });
                         //hive 【hasn't finished】
                     });
@@ -207,7 +238,21 @@ export default {
                                 this.t_neo4j = res.data;
                                 //hive 【hasn't finished】
 
-                                this.drawchart();
+                                axios
+                                    .get('http://47.101.153.105:8100/spark/byColla/count/acac',
+                                        {
+                                            params: {
+                                                collaTime: this.times
+                                            }
+                                        })
+                                    .then((res) => {
+                                        console.log(res);
+
+                                        this.t_hive = parseInt(res.data.time * 1000);
+
+
+                                        this.drawchart();
+                                    });
                             });
                     });
 
