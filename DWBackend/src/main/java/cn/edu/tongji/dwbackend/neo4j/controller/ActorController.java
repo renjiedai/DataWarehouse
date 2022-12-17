@@ -40,7 +40,7 @@ public class ActorController {
     public Integer findstarmovie(@RequestParam String actorName){
         Session session=driver.session();
         long startTime = System.currentTimeMillis();
-        Result res=session.run("match(p:actor)-[:star_in]->(m:movie) where p.name="+actorName+" return m");
+        Result res=session.run("match(p:actor)-[:star_in]->(m:movie) where p.name=\""+actorName+"\" return m");
         // 记录结束时间
         long endTime = System.currentTimeMillis();
         return (int) (endTime-startTime);
@@ -51,7 +51,7 @@ public class ActorController {
     public Integer findactmovie(@RequestParam String actorName){
         Session session=driver.session();
         long startTime = System.currentTimeMillis();
-        Result res=session.run("match(p:actor)-[:act_in]->(m:movie) where p.name="+actorName+" return m");
+        Result res=session.run("match(p:actor)-[:act_in]->(m:movie) where p.name=\""+actorName+"\" return m");
         // 记录结束时间
         long endTime = System.currentTimeMillis();
         return (int) (endTime-startTime);
@@ -62,7 +62,7 @@ public class ActorController {
     public Integer findinmovie(@RequestParam String actorName){
         Session session=driver.session();
         long startTime = System.currentTimeMillis();
-        Result res=session.run("match(p:actor)-[:act_in|star_in]->(m:movie) where p.name="+actorName+" return m");
+        Result res=session.run("match(p:actor)-[:act_in|star_in]->(m:movie) where p.name=\""+actorName+"\" return m");
         // 记录结束时间
         long endTime = System.currentTimeMillis();
         return (int) (endTime-startTime);

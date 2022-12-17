@@ -19,7 +19,7 @@ public class MovieController {
     Integer getMovies(@RequestParam String name){
         Session session=driver.session();
         long startTime = System.currentTimeMillis();
-        Result res=session.run("match(m:movie) where m.movie_name contains "+name+" return m");
+        Result res=session.run("match(m:movie) where m.movie_name contains \""+name+"\" return m");
         // 记录结束时间
         long endTime = System.currentTimeMillis();
         return (int) (endTime-startTime);
@@ -27,7 +27,7 @@ public class MovieController {
 
     //score more than
     @GetMapping("/score")
-    Integer byscore(@RequestParam Integer value){
+    Integer byscore(@RequestParam String value){
         Session session=driver.session();
         long startTime = System.currentTimeMillis();
         Result res=session.run("match(m:movie) where m.score>"+value+" return m");
@@ -35,7 +35,16 @@ public class MovieController {
         long endTime = System.currentTimeMillis();
         return (int) (endTime-startTime);
     }
-    //貌似没有好评率的指标
+
+    @GetMapping("/posrate")
+    Integer byrate(@RequestParam String value){
+        Session session=driver.session();
+        long startTime = System.currentTimeMillis();
+        Result res=session.run("match(m:movie) where m.pos_rate>"+value+" return m");
+        // 记录结束时间
+        long endTime = System.currentTimeMillis();
+        return (int) (endTime-startTime);
+    }
 
     @GetMapping("/ym")
     Integer byym(@RequestParam Integer year, @RequestParam Integer month){

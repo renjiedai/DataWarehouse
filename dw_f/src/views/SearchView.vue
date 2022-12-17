@@ -36,21 +36,21 @@
           <div v-if="entity === '电影'" style="margin-top: 20px;">
             <slot> 请输入电影名： </slot>
             <el-input class="m-2" v-model="movie_name" style="width:150px;margin-left: 10px"
-            placeholder="Please input name" />
+              placeholder="Please input name" />
           </div>
 
           <div v-if="entity === '导演' && standard === '执导'" style="margin-top: 20px;">
             <slot> 请输入导演名： </slot>
             <el-input class="m-2" v-model="dirname" style="width:150px;margin-left: 10px"
-            placeholder="Please input name" />
+              placeholder="Please input name" />
           </div>
 
           <div v-if="entity === '演员'" style="margin-top: 20px;">
             <slot> 请输入演员名： </slot>
             <el-input class="m-2" v-model="actorname" style="width:150px;margin-left: 10px"
-            placeholder="Please input name" />
+              placeholder="Please input name" />
           </div>
-          
+
           <div v-if="entity === '日期【年季】'" style="margin-top: 20px;">
             <el-input-number v-model="year" :min="1600" :max="2022" @change="handleChange" />
             <slot> 年 </slot>
@@ -99,15 +99,16 @@
             <span style="font-size: 25px;">查询结果</span>
           </div>
         </template>
+        <p style="text-align:left; margin-bottom: 20px;">查询结果：{{ result }}</p>
         <p style="text-align:left; margin-bottom: 20px;">查询用时</p>
         <p style="text-align:left; margin-bottom: 20px;">mysql : {{ t_mysql }}</p>
         <p style="text-align:left; margin-bottom: 20px;">hive : {{ t_hive }}</p>
         <p style="text-align:left; margin-bottom: 50px;">neo4j : {{ t_neo4j }}</p>
         <div id="chart1" style="width: 600px;height:400px;"></div>
         <div v-if="entity === '评分'">
-          <p style="text-align:left; margin-bottom: 20px;">查询结果</p>
+          <p style="text-align:left; margin-bottom: 20px;">查询结果详情</p>
           <el-table :data="movies" height="250" style="width: 100%">
-            <el-table-column prop="movie" label="Movie" width="180" />
+            <el-table-column prop="movie" label="Movie" />
           </el-table>
         </div>
       </el-card>
@@ -135,11 +136,12 @@ export default {
       season: "",
       dirname: "",
       actorname: "",
-      movie_name:"",
+      movie_name: "",
       ym: "",
       ymd1: "",
       ymd2: "",
-      movies: [],
+      result: "",
+      movies: [],//部分会显示的表格内容
       dbs: [
         {
           value: 'neo4j',
@@ -271,19 +273,6 @@ export default {
       return ret;
     },
 
-    drawchart() {
-      //获取到的数据渲染echart
-      var myChart = echarts.init(document.getElementById('chart1'));//var仅限function内
-      var times = [this.t_mysql, this.t_hive, this.t_neo4j]; //不知道支不支持
-      myChart.setOption({
-        series: [
-          {
-            data: times
-          }
-        ]
-      })
-    },
-
     search() {
       if (this.entity == "导演" && this.standard == "执导") {
         //mysql
@@ -295,20 +284,26 @@ export default {
               }
             })
           .then((res) => {
-            console.log(res);
+            this.result = res.data.num;
+            this.t_mysql = res.data.time;
+            //neo4j
+            axios
+              .get('/director/dirmovie',
+                {
+                  params: {
+                    directorName: this.dirname
+                  }
+                })
+              .then((res) => {
+                console.log(res);
+                console.log(res.data);
+                this.t_neo4j = parseInt(res.data);
+                console.log(this.t_neo4j);
+                //hive还没写
+                this.t_hive = 50;
+                this.drawchart();
+              });
           });
-        //neo4j
-        axios
-          .get('/director/dirmovie',
-            {
-              params: {
-                directorName: this.dirname
-              }
-            })
-          .then((res) => {
-            console.log(res);
-          });
-        //hive 【hasn't finished】
       }
       else if (this.entity == "电影" && this.standard == "版本数") {
         //mysql
@@ -321,19 +316,27 @@ export default {
             })
           .then((res) => {
             console.log(res);
+            this.t_mysql = res.data.time;
+            this.result = res.data.num;
+            //neo4j
+            axios
+              .get('/movie/byname',
+                {
+                  params: {
+                    name: this.movie_name
+                  }
+                })
+              .then((res) => {
+                console.log(res);
+                this.t_neo4j = res.data;
+
+                //hive 【hasn't finished】
+                this.t_hive = 50;
+                this.drawchart();
+              });
+
           });
-        //neo4j
-        axios
-          .get('/movie/byname',
-            {
-              params: {
-                name: this.movie_name
-              }
-            })
-          .then((res) => {
-            console.log(res);
-          });
-        //hive 【hasn't finished】
+
       }
       else if (this.entity == "演员") {
         if (this.standard == "主演") {
@@ -348,18 +351,26 @@ export default {
               })
             .then((res) => {
               console.log(res);
+              this.t_mysql = res.data.time;
+              this.result = res.data.num;
+
+              //neo4j
+              axios
+                .get('/actor/starmovie',
+                  {
+                    params: {
+                      actorName: this.actorname,
+                    }
+                  })
+                .then((res) => {
+                  console.log(res);
+                  this.t_neo4j = res.data;
+
+                  //hive
+                  this.drawchart();
+                })
             })
-          //neo4j
-          axios
-            .get('/actor/starmovie',
-              {
-                params: {
-                  actorName: this.actorname,
-                }
-              })
-            .then((res) => {
-              console.log(res);
-            })
+
         }
         else if (this.standard == "非主演") {
           //mysql
@@ -373,22 +384,31 @@ export default {
               })
             .then((res) => {
               console.log(res);
+              this.t_mysql = res.data.time;
+              this.result = res.data.num;
+
+              //neo4j
+              axios
+                .get('/actor/actmovie',
+                  {
+                    params: {
+                      actorName: this.actorname,
+                    }
+                  })
+                .then((res) => {
+                  console.log(res);
+                  this.t_neo4j = res.data;
+
+                  //hive
+                  this.drawchart();
+                })
             })
-          //neo4j
-          axios
-            .get('/actor/actmovie',
-              {
-                params: {
-                  actorName: this.actorname,
-                }
-              })
-            .then((res) => {
-              console.log(res);
-            })
+
         }
         else if (this.standard == "参演") {
           //mysql
           var time1, time2;
+          var result1, result2;
           axios
             .get('mysql/byActor/count/movie',
               {
@@ -400,30 +420,38 @@ export default {
             .then((res) => {
               console.log(res);
               time1 = res.data.time;
-            })
-          axios
-            .get('mysql/byActor/count/movie',
-              {
-                params: {
-                  actorName: this.actorname,
-                  isStarring: true,
-                }
-              })
-            .then((res) => {
-              console.log(res);
-              time2 = res.data.time;
-            })
-          this.t_mysql = parseInt(time1) + parseInt(time2);
-          //neo4j
-          axios
-            .get('/actor/inmovie',
-              {
-                params: {
-                  actorName: this.actorname,
-                }
-              })
-            .then((res) => {
-              console.log(res);
+              result1 = res.data.num;
+              axios
+                .get('mysql/byActor/count/movie',
+                  {
+                    params: {
+                      actorName: this.actorname,
+                      isStarring: true,
+                    }
+                  })
+                .then((res) => {
+                  console.log(res);
+                  time2 = res.data.time;
+                  result2 = res.data.num;
+                  this.t_mysql = parseInt(time1) + parseInt(time2);
+                  this.result = result1 + result2;
+
+                  //neo4j
+                  axios
+                    .get('/actor/inmovie',
+                      {
+                        params: {
+                          actorName: this.actorname,
+                        }
+                      })
+                    .then((res) => {
+                      console.log(res);
+                      this.t_neo4j = res.data;
+
+                      //hive
+                      this.drawchart();
+                    })
+                })
             })
         }
       }
@@ -434,26 +462,40 @@ export default {
             .get('mysql/byComment/score',
               {
                 params: {
-                  score: parseInt(this.value)
-                }
-              })
-            .then((res) => {
-              console.log(res);
-            });
-          //neo4j
-          axios
-            .get('/score',
-              {
-                params: {
                   score: this.value
                 }
               })
             .then((res) => {
               console.log(res);
-            });
-          //hive
-        }
+              this.t_mysql = res.data.time;
+              this.result = res.data.num;
 
+              var values = res.data.data;
+              var fi = [];
+              for (var i = 0; i < values.length; i++) {
+                var m = { movie: values[i] };
+                fi.push(m);
+              }
+              this.movies = fi;
+              console.log(this.movies);
+              //neo4j
+              axios
+                .get('/movie/score',
+                  {
+                    params: {
+                      value: this.value
+                    }
+                  })
+                .then((res) => {
+                  console.log(res);
+                  this.t_neo4j = res.data;
+
+                  //hive
+                  this.t_hive = 50;
+                  this.drawchart();
+                });
+            });
+        }
         else if (this.standard == "好评率大于等于") {
           //mysql
           axios
@@ -465,19 +507,32 @@ export default {
               })
             .then((res) => {
               console.log(res);
+              this.t_mysql=res.data.time;
+              var values = res.data.data;
+              var fi = [];
+              for (var i = 0; i < values.length; i++) {
+                var m = { movie: values[i] };
+                fi.push(m);
+              }
+              this.movies = fi;
+
+              //neo4j
+              axios
+                .get('/movie/posrate',
+                  {
+                    params: {
+                      value: this.value
+                    }
+                  })
+                .then((res) => {
+                  console.log(res);
+                  this.t_neo4j = res.data;
+
+                  //hive
+                  this.drawchart();
+                });
             });
-          //neo4j
-          axios
-            .get('/rate',
-              {
-                params: {
-                  rate: this.value
-                }
-              })
-            .then((res) => {
-              console.log(res);
-            });
-          //hive
+
         }
 
       }
@@ -575,8 +630,22 @@ export default {
           });
         //hive
       }
-      this.drawchart();
+      //this.drawchart();
     },
+
+    drawchart() {
+      //获取到的数据渲染echart
+      var myChart = echarts.init(document.getElementById('chart1'));//var仅限function内
+      var times = [this.t_mysql, this.t_hive, this.t_neo4j]; //不知道支不支持
+      myChart.setOption({
+        series: [
+          {
+            data: times
+          }
+        ]
+      })
+    },
+
 
     echartsInit() {
       var myChart = echarts.init(document.getElementById('chart1'));
