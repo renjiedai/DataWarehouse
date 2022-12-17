@@ -2,12 +2,12 @@ package cn.edu.tongji.dwbackend.mysql.controller;
 
 
 import cn.edu.tongji.dwbackend.mysql.dto.GetNameList;
-import cn.edu.tongji.dwbackend.mysql.entity.DirectorMovieEntity;
 import cn.edu.tongji.dwbackend.mysql.entity.ViewActorScoreTimeEntity;
 import cn.edu.tongji.dwbackend.mysql.entity.ViewDirectorScoreTypeEntity;
+import cn.edu.tongji.dwbackend.mysql.entity.ViewTypeActorGroupEntity;
 import cn.edu.tongji.dwbackend.mysql.repository.AcScRepo;
 import cn.edu.tongji.dwbackend.mysql.repository.DicScRepo;
-import cn.edu.tongji.dwbackend.mysql.repository.DirectorMovieRepository;
+import cn.edu.tongji.dwbackend.mysql.repository.TypeGroupRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,6 +29,9 @@ public class Combine {
 
     @Resource
     AcScRepo acScRepo;
+
+    @Resource
+    TypeGroupRepo typeGroupRepo;
 
 
     @RequestMapping(value = "list/rate",method = RequestMethod.GET)
@@ -87,4 +90,19 @@ public class Combine {
         result.setData(nameL);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+
+    @RequestMapping(value = "list/type",method = RequestMethod.GET)
+    public long getCombine1(String type){
+        long startTime=System.currentTimeMillis();
+        List<ViewTypeActorGroupEntity> typeActorGroupEntities=typeGroupRepo.findTopByCommentAndType(type);
+        long endTime=System.currentTimeMillis();
+        return  endTime-startTime;
+
+
+
+
+
+    }
+
 }
