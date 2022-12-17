@@ -1,10 +1,5 @@
 package cn.edu.tongji.dwbackend.neo4j.controller;
 
-import com.example.neo4jtest.model.Actor;
-import com.example.neo4jtest.model.Director;
-import com.example.neo4jtest.model.Pair;
-import com.example.neo4jtest.service.nodeservice.ActorService;
-
 import org.neo4j.driver.*;
 import org.neo4j.driver.Record;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,29 +18,6 @@ public class ActorController {
             .driver("neo4j://47.100.205.153:7687", AuthTokens.basic("neo4j", "dw1234"));
 //    private final Driver driver;
 //    public ActorController(Driver d){driver=d;}
-
-    @Autowired
-    private ActorService actorService;
-
-    @GetMapping("/byname")
-    public Actor getActor(@RequestParam String name){
-        return actorService.findByName(name);
-    }
-
-    @GetMapping("/actnum")
-    public List<String> getactnum(@RequestParam String name){
-        return actorService.getactnum(getActor(name));
-    }
-
-    @GetMapping("/starnum")
-    public List<String> getstarnum(@RequestParam String name){
-        return actorService.getstarnum(getActor(name));
-    }
-
-    @GetMapping("/joinnum")
-    public List<String> getjoinnum(@RequestParam String name){
-        return actorService.getjoinnum(getActor(name));
-    }
 
     /*
     @GetMapping("/findmosttwo")

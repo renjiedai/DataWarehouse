@@ -1,7 +1,4 @@
 package cn.edu.tongji.dwbackend.neo4j.controller;
-
-import com.example.neo4jtest.model.Movie;
-import com.example.neo4jtest.service.nodeservice.MovieService;
 import org.neo4j.driver.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,15 +14,6 @@ public class MovieController {
             .driver("neo4j://47.100.205.153:7687", AuthTokens.basic("neo4j", "dw1234"));
 //    private final Driver driver;
 //    public MovieController(Driver d){driver=d;}
-
-    @Autowired
-    private MovieService movieService;
-
-    @GetMapping("/findall")
-    Collection<Movie> findAll(){
-        return movieService.findAll();
-    }
-
 
     @GetMapping("/byname")
     Integer getMovies(@RequestParam String name){

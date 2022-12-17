@@ -1,8 +1,5 @@
 package cn.edu.tongji.dwbackend.neo4j.controller;
 
-import com.example.neo4jtest.model.Director;
-import com.example.neo4jtest.model.Pair;
-import com.example.neo4jtest.service.nodeservice.DirectorService;
 import org.neo4j.driver.*;
 import org.neo4j.driver.Record;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,20 +21,6 @@ public class DirectorController {
     private final Driver driver = GraphDatabase
             .driver("neo4j://47.100.205.153:7687", AuthTokens.basic("neo4j", "dw1234"));
 
-    @Autowired
-    private DirectorService directorService;
-
-    @GetMapping("/byname")
-    Director getDirector(@RequestParam String name){
-        return directorService.findByName(name);
-    }
-
-
-    @GetMapping("/movienum")
-    List<String> getnum(@RequestParam String name){
-        return directorService.getNum(name);
-    }
-
     @GetMapping("/dirmovie")
     public int findmovie(@RequestParam String directorName){
         Session session=driver.session();
@@ -49,7 +32,7 @@ public class DirectorController {
     }
 
     @GetMapping("/findtwo")
-    public HashMap<String,Object> findtwo(){
+    public Integer findtwo(){
         Session session=driver.session();
         long startTime = System.currentTimeMillis();
         Result res=session.run("match(p1:director)-[:direct_in]->(m:movie)<-[:direct_in]-(p2:director) "+
@@ -57,6 +40,7 @@ public class DirectorController {
                                     "ORDER BY time DESC" );
         // 记录结束时间
         long endTime = System.currentTimeMillis();
+        /*
         List<Record> relation=res.list();
         List<Pair> pairs=new ArrayList<>();
 
@@ -75,11 +59,13 @@ public class DirectorController {
         HashMap<String,Object> ret=new HashMap<>();
         ret.put("data",pairs);
         ret.put("time",endTime-startTime);
+
+         */
         /*
         System.out.println("---------------------");
         System.out.println(endTime-startTime);
         System.out.println("---------------------");
          */
-        return ret;
+        return (int)(endTime-startTime);
     }
 }
