@@ -17,6 +17,11 @@
         </a>
       </li>
       <li>
+        <a href="#/combineinfo">
+          <i class="zmdi zmdi-widgets"></i> 组合信息查询
+        </a>
+      </li>
+      <li>
         <a href="#/movieinfo">
           <i class="zmdi zmdi-widgets"></i> 电影信息统计
         </a>

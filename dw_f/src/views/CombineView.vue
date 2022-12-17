@@ -7,19 +7,36 @@
                         <span style="font-size: 25px;">查询条件</span>
                     </div>
                 </template>
-                <div>
-                    <div style="margin-bottom:20px">请确定查询标准：</div>
-                    <slot>合作次数超过</slot>
-                    <el-input-number v-model="times" :min="0" :max="100" />
-                    <slot>次的</slot>
-                    <el-select v-model="type1" class="m-2" placeholder="Select" size="large">
-                        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
-                    </el-select>
-                    <slot>和</slot>
-                    <el-select v-model="type2" class="m-2" placeholder="Select" size="large">
+                <div style="margin-bottom:20px">
+                    <slot>请确定查询标准：</slot>
+                    <el-select v-model="type" class="m-2" placeholder="Select" size="large">
                         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
                     </el-select>
                 </div>
+
+                <div v-if="type === '组合2'" style="margin-top: 20px;">
+                    <slot> 导演：</slot>
+                    <el-input class="m-2" v-model="dir_name" style="width:150px; margin-right: 10px;"
+                        placeholder="Please input name" />
+                    <slot> 类型：</slot>
+                    <el-input class="m-2" v-model="type_name" style="width:150px; margin-right: 10px;"
+                        placeholder="Please input type" />
+                    <slot> 差评率大于 </slot>
+                    <el-input-number v-model="num" :precision="2" :step="0.1" :min="0" :max="1" />
+                </div>
+
+                <div v-if="type === '组合3'" style="margin-top: 20px;">
+                    <slot>拍摄年份范围：</slot>
+                    <el-input-number v-model="year1" :step="1" :min="1600" :max="2022" />
+                    <slot> — </slot>
+                    <el-input-number v-model="year2" :step="1" :min="1600" :max="2022" />
+                    <slot> 主演演员：</slot>
+                    <el-input class="m-2" v-model="star_name" style="width:150px; margin-right: 10px;"
+                        placeholder="Please input name" />
+                    <slot> 评分大于：</slot>
+                    <el-input-number v-model="score" :precision="1" :step="0.1" :min="0" :max="5" />
+                </div>
+
 
                 <br />
                 <button @click="search()"> 查询 </button>
@@ -64,18 +81,28 @@ export default {
             t_mysql: "",
             t_hive: "",
             t_neo4j: "",
-            type1: "",
-            type2: "",
+            type: "",
             times: "",
+            dir_name:"",
+            type_name:"",
+            num:"",
+            year1:"",
+            year2:"",
+            star_name:"",
+            score:"",
             pairs: [], //the couple name and numcount
             options: [
                 {
-                    value: '导演',
-                    label: '导演',
+                    value: '组合1',
+                    label: '组合1',
                 },
                 {
-                    value: '演员',
-                    label: '演员',
+                    value: '组合2',
+                    label: '组合2',
+                },
+                {
+                    value: '组合3',
+                    label: '组合3',
                 },
             ],
         }
@@ -95,13 +122,40 @@ export default {
         },
 
         search() {
-            if (this.type1 == "导演" && this.type2 == "导演") {
+            if (this.type == "组合1") {
+                // //mysql
+                // axios
+                //     .get('mysql/byColla/count/colla/dcdc',
+                //         {
+                //             params: {
+                //                 collaTime: this.times
+                //             }
+                //         })
+                //     .then((res) => {
+                //         console.log(res);
+                //     });
+                // //neo4j
+                // axios
+                //     .get('/director/findtwo',
+                //         {
+                //             params: {
+                //                 time: this.times
+                //             }
+                //         })
+                //     .then((res) => {
+                //         console.log(res);
+                //     });
+                // //hive 【hasn't finished】
+            }
+            else if (this.type == "组合2") {
                 //mysql
                 axios
-                    .get('mysql/byColla/count/colla/dcdc',
+                    .get('mysql/combine/list/rate',
                         {
                             params: {
-                                collaTime: this.times
+                                directorName: this.dir_name,
+                                type:this.type_name,
+                                rate:this.value,
                             }
                         })
                     .then((res) => {
@@ -109,10 +163,12 @@ export default {
                     });
                 //neo4j
                 axios
-                    .get('/director/findtwo',
+                    .get('',
                         {
                             params: {
-                                time: this.times
+                                directorName: this.dir_name,
+                                type:this.type_name,
+                                rate:this.value,
                             }
                         })
                     .then((res) => {
@@ -120,13 +176,16 @@ export default {
                     });
                 //hive 【hasn't finished】
             }
-            else if ((this.type1 == "导演" && this.type2 == "演员") || (this.type1 == '演员' && this.type2 == '导演')) {
+            else if (this.type == "组合3") {
                 //mysql
                 axios
-                    .get('mysql/byColla/count/colla/dcac',
+                    .get('mysql/combine/list/score',
                         {
                             params: {
-                                collaTime: this.times
+                                start: this.year1,
+                                end:this.year2,
+                                name:this.star_name,
+                                score:this.score
                             }
                         })
                     .then((res) => {
@@ -134,35 +193,13 @@ export default {
                     });
                 //neo4j
                 axios
-                    .get('/actor/finddir',
+                    .get('/',
                         {
                             params: {
-                                time: this.times
-                            }
-                        })
-                    .then((res) => {
-                        console.log(res);
-                    });
-                //hive 【hasn't finished】
-            }
-            else if (this.type1 == '演员' && this.type2 == '演员') {
-                //mysql
-                axios
-                    .get('mysql/byColla/count/acac',
-                        {
-                            params: {
-                                collaTime: this.times
-                            }
-                        })
-                    .then((res) => {
-                        console.log(res);
-                    });
-                //neo4j
-                axios
-                    .get('/actor/findtwo',
-                        {
-                            params: {
-                                time: this.times
+                                start: this.year1,
+                                end:this.year2,
+                                name:this.star_name,
+                                score:this.score
                             }
                         })
                     .then((res) => {

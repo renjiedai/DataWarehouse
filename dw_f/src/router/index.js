@@ -3,7 +3,7 @@ import SearchView from '../views/SearchView.vue'
 import CooperateView from '../views/CooperateView.vue'
 import MovieinfoView from '../views/MovieinfoView.vue'
 import TracebackView from '../views/TracebackView.vue'
-
+import CombineView from '../views/CombineView.vue'
 
 const routes = [
   {
@@ -22,13 +22,18 @@ const routes = [
   },
   {
     path: '/traceback',
-    name: 'cooperatesearch',
+    name: 'traceback',
     component: TracebackView
   },
   {
     path: '/cooperate',
     name: 'cooperatesearch',
     component: CooperateView
+  },
+  {
+    path: '/combineinfo',
+    name: 'combineinfo',
+    component: CombineView
   },
 
 ]
