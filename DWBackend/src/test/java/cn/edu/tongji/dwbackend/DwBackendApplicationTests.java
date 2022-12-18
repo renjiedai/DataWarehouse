@@ -8,10 +8,6 @@ class DwBackendApplicationTests {
 
     @Test
     void contextLoads() {
-        System.out.println("{");
-        System.out.println("    \"num\" : 18,");
-        System.out.println("    \"time\" : 144 ");
-        System.out.println("}");
     }
 
 }

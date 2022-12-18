@@ -197,7 +197,7 @@ export default {
                     });
                 //neo4j
                 axios
-                    .get('http://localhost:3445/',
+                    .get('http://localhost:3445/combine/findcomb1',
                         {
                             params: {
                                 directorName: this.dir_name,
@@ -224,22 +224,23 @@ export default {
                         })
                     .then((res) => {
                         console.log(res);
+                        //neo4j
+                        axios
+                            .get('http://localhost:3445/combine/findcomb2',
+                                {
+                                    params: {
+                                        start: this.year1,
+                                        end: this.year2,
+                                        name: this.star_name,
+                                        score: this.score
+                                    }
+                                })
+                            .then((res) => {
+                                console.log(res);
+                            });
+                        //hive 【hasn't finished】
                     });
-                //neo4j
-                axios
-                    .get('/',
-                        {
-                            params: {
-                                start: this.year1,
-                                end: this.year2,
-                                name: this.star_name,
-                                score: this.score
-                            }
-                        })
-                    .then((res) => {
-                        console.log(res);
-                    });
-                //hive 【hasn't finished】
+
             }
             this.drawchart();
         },
