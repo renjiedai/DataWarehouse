@@ -16,7 +16,7 @@ public class CombineController {
     public Integer findpair(@RequestParam String type){
         Session session=driver.session();
         long startTime = System.currentTimeMillis();
-        Result res=session.run("match(m:movie)-[:belong]->(n:type where n.type_name=\""+type+"\" with m " + " order by m.comment_num DESC limit 1 match(a:actor)-[:star_in]->(m) return a");
+        Result res=session.run("match(m:movie)-[:belong]->(n:type where n.type_name=\""+type+"\") with m " + " order by m.comment_num DESC limit 1 match(a:actor)-[:star_in]->(m) return a");
         // 记录结束时间
         long endTime = System.currentTimeMillis();
         return (int) (endTime-startTime);
@@ -26,7 +26,7 @@ public class CombineController {
     public Integer findmovie1(@RequestParam String directorName,@RequestParam String type,@RequestParam String rate){
         Session session=driver.session();
         long startTime = System.currentTimeMillis();
-        Result res=session.run("match (d:director)-[:direct_in]->(m:movie) where m.type_name=\""+type+"\" and m.neg_rat>"+rate+"and d.director_name=\""+directorName+"\" return m");
+        Result res=session.run("match (d:director)-[:direct_in]->(m:movie) where m.type_name=\""+type+"\" and m.neg_rate>"+rate+" and d.director_name=\""+directorName+"\" return m");
         // 记录结束时间
         long endTime = System.currentTimeMillis();
         return (int) (endTime-startTime);

@@ -277,7 +277,7 @@ export default {
       if (this.entity == "导演" && this.standard == "执导") {
         //mysql
         axios
-          .get('http://localhost:3445/mysql/byDirector/count/movie',
+          .get('http://47.100.205.153:3445/mysql/byDirector/count/movie',
             {
               params: {
                 directorName: this.dirname
@@ -288,7 +288,7 @@ export default {
             this.t_mysql = res.data.time;
             //neo4j
             axios
-              .get('http://localhost:3445/director/dirmovie',
+              .get('http://47.100.205.153:3445/director/dirmovie',
                 {
                   params: {
                     directorName: this.dirname
@@ -322,7 +322,7 @@ export default {
       else if (this.entity == "电影" && this.standard == "版本数") {
         //mysql
         axios
-          .get('http://localhost:3445/mysql/byMovieName/count/format',
+          .get('http://47.100.205.153:3445/mysql/byMovieName/count/format',
             {
               params: {
                 movieName: this.movie_name
@@ -334,7 +334,7 @@ export default {
             this.result = res.data.num;
             //neo4j
             axios
-              .get('http://localhost:3445/movie/byname',
+              .get('http://47.100.205.153:3445/movie/byname',
                 {
                   params: {
                     name: this.movie_name
@@ -370,7 +370,7 @@ export default {
         if (this.standard == "主演") {
           //mysql
           axios
-            .get('http://localhost:3445/mysql/byActor/count/movie',
+            .get('http://47.100.205.153:3445/mysql/byActor/count/movie',
               {
                 params: {
                   actorName: this.actorname,
@@ -384,7 +384,7 @@ export default {
 
               //neo4j
               axios
-                .get('http://localhost:3445/actor/starmovie',
+                .get('http://47.100.205.153:3445/actor/starmovie',
                   {
                     params: {
                       actorName: this.actorname,
@@ -418,7 +418,7 @@ export default {
         else if (this.standard == "非主演") {
           //mysql
           axios
-            .get('http://localhost:3445/mysql/byActor/count/movie',
+            .get('http://47.100.205.153:3445/mysql/byActor/count/movie',
               {
                 params: {
                   actorName: this.actorname,
@@ -432,7 +432,7 @@ export default {
 
               //neo4j
               axios
-                .get('http://localhost:3445/actor/actmovie',
+                .get('http://47.100.205.153:3445/actor/actmovie',
                   {
                     params: {
                       actorName: this.actorname,
@@ -468,7 +468,7 @@ export default {
           var time1, time2, time3, time4;
           var result1, result2;
           axios
-            .get('http://localhost:3445/mysql/byActor/count/movie',
+            .get('http://47.100.205.153:3445/mysql/byActor/count/movie',
               {
                 params: {
                   actorName: this.actorname,
@@ -480,7 +480,7 @@ export default {
               time1 = res.data.time;
               result1 = res.data.num;
               axios
-                .get('http://localhost:3445/mysql/byActor/count/movie',
+                .get('http://47.100.205.153:3445/mysql/byActor/count/movie',
                   {
                     params: {
                       actorName: this.actorname,
@@ -496,7 +496,7 @@ export default {
 
                   //neo4j
                   axios
-                    .get('http://localhost:3445/actor/inmovie',
+                    .get('http://47.100.205.153:3445/actor/inmovie',
                       {
                         params: {
                           actorName: this.actorname,
@@ -547,7 +547,7 @@ export default {
         if (this.standard == "分数大于等于") {
           //mysql
           axios
-            .get('http://localhost:3445/mysql/byComment/score',
+            .get('http://47.100.205.153:3445/mysql/byComment/score',
               {
                 params: {
                   score: this.value
@@ -568,7 +568,7 @@ export default {
               console.log(this.movies);
               //neo4j
               axios
-                .get('http://localhost:3445/movie/score',
+                .get('http://47.100.205.153:3445/movie/score',
                   {
                     params: {
                       value: this.value
@@ -600,7 +600,7 @@ export default {
         else if (this.standard == "好评率大于等于") {
           //mysql
           axios
-            .get('http://localhost:3445/mysql/byComment/rate',
+            .get('http://47.100.205.153:3445/mysql/byComment/rate',
               {
                 params: {
                   rate: parseInt(this.value)
@@ -619,7 +619,7 @@ export default {
 
               //neo4j
               axios
-                .get('http://localhost:3445/movie/posrate',
+                .get('http://47.100.205.153:3445/movie/posrate',
                   {
                     params: {
                       value: this.value
@@ -656,7 +656,7 @@ export default {
         var m = this.ym.getMonth() + 1;
         //mysql
         axios
-          .get('http://localhost:3445/mysql/byTime/count/yearMonth',
+          .get('http://47.100.205.153:3445/mysql/byTime/count/yearMonth',
             {
               params: {
                 year: y,
@@ -670,7 +670,7 @@ export default {
 
             //neo4j
             axios
-              .get('http://localhost:3445/movie/ym',
+              .get('http://47.100.205.153:3445/movie/ym',
                 {
                   params: {
                     year: y,
@@ -709,7 +709,7 @@ export default {
       else if (this.entity == "日期【年季】") {
         //mysql
         axios
-          .get('http://localhost:3445/mysql/byTime/count/yearSeason',
+          .get('http://47.100.205.153:3445/mysql/byTime/count/yearSeason',
             {
               params: {
                 year: this.year,
@@ -723,7 +723,7 @@ export default {
 
             //neo4j
             axios
-              .get('http://localhost:3445/movie/ys',
+              .get('http://47.100.205.153:3445/movie/ys',
                 {
                   params: {
                     year: this.year,
@@ -771,7 +771,7 @@ export default {
 
         //mysql
         axios
-          .get('http://localhost:3445/mysql/byTime/count/yearMonthDay',
+          .get('http://47.100.205.153:3445/mysql/byTime/count/yearMonthDay',
             {
               params: {
                 start: s1,
@@ -785,7 +785,7 @@ export default {
 
             //neo4j
             axios
-              .get('http://localhost:3445/movie/ymd',
+              .get('http://47.100.205.153:3445/movie/ymd',
                 {
                   params: {
                     startYear: y1,

@@ -141,7 +141,7 @@ export default {
             if (this.type == "组合1") {
                 //mysql
                 axios
-                    .get('http://localhost:3445/mysql/combine/list/type',
+                    .get('http://47.100.205.153:3445/mysql/combine/list/type',
                         {
                             params: {
                                 type: this.type_name
@@ -150,10 +150,9 @@ export default {
                     .then((res) => {
                         console.log(res);
                         this.t_mysql = res.data;
-                        this.t_hive = parseInt(1000);
                         //neo4j
                         axios
-                            .get('http://localhost:3445/combine/typepair',
+                            .get('http://47.100.205.153:3445/combine/typepair',
                                 {
                                     params: {
                                         type: this.type_name
@@ -172,7 +171,6 @@ export default {
                                         })
                                     .then((res) => {
                                         console.log(res);
-
                                         this.t_hive = parseInt(res.data.time * 1000);
                                         this.result = res.data.actors;
 
@@ -184,36 +182,65 @@ export default {
             else if (this.type == "组合2") {
                 //mysql
                 axios
-                    .get('http://localhost:3445/mysql/combine/list/rate',
+                    .get('http://47.100.205.153:3445/mysql/combine/list/rate',
                         {
                             params: {
                                 directorName: this.dir_name,
                                 type: this.type_name,
-                                rate: this.value,
+                                rate: this.num,
                             }
                         })
                     .then((res) => {
                         console.log(res);
+                        this.t_mysql = res.data.time;
+                        this.result = res.data.num;
+                        var values = res.data.data;
+                        var fi = [];
+                        for (var i = 0; i < values.length; i++) {
+                            var m = { movie: values[i] };
+                            fi.push(m);
+                        }
+                        this.movies = fi;
+                        //neo4j
+                        axios
+                            .get('http://47.100.205.153:3445/combine/findcomb1',
+                                {
+                                    params: {
+                                        directorName: this.dir_name,
+                                        type: this.type_name,
+                                        rate: this.num,
+                                    }
+                                })
+                            .then((res) => {
+                                console.log(res);
+                                this.t_neo4j = res.data;
+
+                                axios
+                                    .get('http://47.101.153.105:8100/spark/combine/list/rate',
+                                        {
+                                            params: {
+                                                directorName: this.dir_name,
+                                                type: this.type_name,
+                                                rate: this.num,
+                                            }
+                                        })
+                                    .then((res) => {
+                                        console.log(res);
+
+                                        this.t_hive = parseInt(res.data.time * 1000);
+
+                                        this.drawchart();
+                                    });
+
+                            });
+                        //hive 【hasn't finished】
                     });
-                //neo4j
-                axios
-                    .get('http://localhost:3445/combine/findcomb1',
-                        {
-                            params: {
-                                directorName: this.dir_name,
-                                type: this.type_name,
-                                rate: this.value,
-                            }
-                        })
-                    .then((res) => {
-                        console.log(res);
-                    });
-                //hive 【hasn't finished】
+
             }
             else if (this.type == "组合3") {
                 //mysql
                 axios
-                    .get('http://localhost:3445/mysql/combine/list/score',
+                    .get('http://47.100.205.153:3445/mysql/combine/list/score',
                         {
                             params: {
                                 start: this.year1,
@@ -224,9 +251,18 @@ export default {
                         })
                     .then((res) => {
                         console.log(res);
+                        this.t_mysql = res.data.time;
+                        this.result = res.data.num;
+                        var values = res.data.data;
+                        var fi = [];
+                        for (var i = 0; i < values.length; i++) {
+                            var m = { movie: values[i] };
+                            fi.push(m);
+                        }
+                        this.movies = fi;
                         //neo4j
                         axios
-                            .get('http://localhost:3445/combine/findcomb2',
+                            .get('http://47.100.205.153:3445/combine/findcomb2',
                                 {
                                     params: {
                                         start: this.year1,
@@ -237,6 +273,27 @@ export default {
                                 })
                             .then((res) => {
                                 console.log(res);
+                                this.t_neo4j = res.data;
+
+                                axios
+                                    .get('http://47.101.153.105:8100/spark/combine/list/score',
+                                        {
+                                            params: {
+                                                start: this.year1,
+                                                end: this.year2,
+                                                name: this.star_name,
+                                                score: this.score
+                                            }
+                                        })
+                                    .then((res) => {
+                                        console.log(res);
+
+                                        this.t_hive = parseInt(res.data.time * 1000);
+
+                                        this.drawchart();
+                                    });
+
+
                             });
                         //hive 【hasn't finished】
                     });
