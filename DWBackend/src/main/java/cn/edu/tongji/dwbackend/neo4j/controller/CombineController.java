@@ -41,4 +41,33 @@ public class CombineController {
         long endTime = System.currentTimeMillis();
         return (int) (endTime-startTime);
     }
+
+    /*
+    @GetMapping("/xxx")
+    public Integer exp1(@RequestParam String asin){
+        Session session=driver.session();
+        long startTime = System.currentTimeMillis();
+        Result res=session.run("match (m:movie) where m.movie_asin=\""+asin+"\" return m");
+        // 记录结束时间
+        long endTime = System.currentTimeMillis();
+        System.out.println((int) (endTime-startTime));
+        return (int) (endTime-startTime);
+    }
+
+
+    @GetMapping("/yyy")
+    public Integer exp2(@RequestParam String actor,@RequestParam String startyear,@RequestParam String endyear,@RequestParam String lowscore,@RequestParam String highscore){
+        Session session=driver.session();
+        long startTime = System.currentTimeMillis();
+        Result res=session.run("match (a:actor)-[:star_in]->(m:movie) where a.actor_name=\""+actor
+                                    +"\" and m.release_time>"+startyear+" and m.release_time<"
+                                    +endyear+" and m.movie_score>="+lowscore
+                                    +" and m.movie_score<="+highscore+" return m");
+        // 记录结束时间
+        long endTime = System.currentTimeMillis();
+        System.out.println((int) (endTime-startTime));
+        return (int) (endTime-startTime);
+    }
+
+     */
 }
