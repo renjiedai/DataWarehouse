@@ -1,7 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import SearchView from '../views/SearchView.vue'
 import CooperateView from '../views/CooperateView.vue'
-import MovieinfoView from '../views/MovieinfoView.vue'
 import TracebackView from '../views/TracebackView.vue'
 import CombineView from '../views/CombineView.vue'
 
@@ -14,11 +13,6 @@ const routes = [
     path: '/searchmovie',
     name: 'searchmovie',
     component: SearchView
-  },
-  {
-    path: '/movieinfo',
-    name: 'movieinfo',
-    component: MovieinfoView
   },
   {
     path: '/traceback',

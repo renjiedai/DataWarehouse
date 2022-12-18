@@ -22,11 +22,6 @@
         </a>
       </li>
       <li>
-        <a href="#/movieinfo">
-          <i class="zmdi zmdi-widgets"></i> 电影信息统计
-        </a>
-      </li>
-      <li>
         <a href="#/traceback">
           <i class="zmdi zmdi-calendar"></i> 电影溯源查询
         </a>
