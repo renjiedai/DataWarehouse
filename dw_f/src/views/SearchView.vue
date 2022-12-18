@@ -609,6 +609,7 @@ export default {
             .then((res) => {
               console.log(res);
               this.t_mysql = res.data.time;
+              this.result = res.data.num;
               var values = res.data.data;
               var fi = [];
               for (var i = 0; i < values.length; i++) {
