@@ -41,11 +41,11 @@
 
 建立冗余字段前：
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmY2ZGM4NDI0MzBhN2FiMmY0ZTY1NjQ3NTBmOTNhZDJfTGdSUnBZVGFINEwyaVQySkJ4TVV4TzdpdDd0d2x6elVfVG9rZW46Ym94Y25jNll2VXVyUEM0czBwY0s3U1p6enZoXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img1.png)
 
 建立冗余字段后：
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=MDhhOGU1MGQ0MjJiYmRhMWU3MDE4MWFmY2Y5YTBhNjVfRnpnZWllWWY1Y3dXdkVlSm9FWlc3SGY1TVVIcHJIM3NfVG9rZW46Ym94Y25NZ2dUbUpVTGxmNENoaUREeWNqbHVjXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img2.png)
 
 以上为后端写好的接口在api-fox中测试的结果，不难看出设置冗余字段后后端接口返回时间大幅减少。
 
@@ -63,7 +63,7 @@
 
 于是根据查询条件进行有针对性地添加索引，从而提高查询速度，具体来说，主要是对于sql语句中on ,group by, order by 中出现的列使用索引。如下所示：
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTY3OGI1NzBhOTRiMzhlNGYzNGY5ZTk0MjQyYWMwY2ZfTHNjbUpLSG5XS0FpdWNacnB6TUlNV3RGdjVQZjdsRFBfVG9rZW46Ym94Y25YeFBIT3JRcHVaZnVCNHl0SXZKd05nXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img3.png)
 
 添加索引前后对比如下：
 
@@ -71,11 +71,11 @@
 
 添加movie_score索引前：
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=Yjk5YzYwMmIzYWQyODUxMDVkODJlMTc2YzdhYmJhMzBfRjlWWVduQ2xyWDlURVh3QWZGNUR5dGJtRW0xREJRTW5fVG9rZW46Ym94Y25Xa0pxa0pGUnZjRTljMUIxSlo2c2pjXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img4.png)
 
 添加movie_score索引后：
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=YzgxNzAwNmExMzI4MTEwOWUwMWViNmZjNjMzN2ViYjVfc1hUSDJtMUlsNjZXWmUzelRZSWpoZWhCY2RpOVR1YnVfVG9rZW46Ym94Y25nYWpYRnNGS05Kb2lYaVhCam80T1pjXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img5.png)
 
 不难看出添加索引后查询速率提高显著。
 
@@ -89,13 +89,13 @@
 
 MySQL的查询语句如下图所示：
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=OGYzM2RhZTcxZTFlNzFlNDk3OWU4YWMzZjY0NGNkZDFfZTh4OW50dHpKS1ZTZ3RUREN4R3F4UW54aXYwd2JyZDZfVG9rZW46Ym94Y25JbkhPbUhVeVFndUFLdGhYRndoVEZmXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img6.png)
 
 需要join多个视图并且可以看出where后面的条件很复杂，因为同一电影的actor是分散存储的。
 
 而我们用Hive进行查询时，SQL语句是这样的：
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=MGZjNzJiN2VmMGMwMGZjNmUxZmY1ODIzMjIwYjJjM2FfYVQ1ZmJQTUlMNWVLZ1QwbFFuc283cFY1VW1meDJMV1NfVG9rZW46Ym94Y25zeG9nbmw2eW8yOHBNdjBrQmtsRWtiXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img7.png)
 
 不难看出，Hive的SQL查询语句语义更加清晰，结构更加简单，操作更加便捷，这些都要归功于array结构的设置
 
@@ -103,9 +103,9 @@ MySQL的查询语句如下图所示：
 
 Hive的运行建立在分布式系统Hadoop之上，因此Hadoop本身的节点设置也是影响Hive查询的重要因素。我们使用的hadoop集群中默认是一个namenode以及一个datanode，然而这种情况下即使使用spark，进行计算的效率也比较有限，于是我们修改了该集群启动项的yml文件，将datanode数量增加为三个，实现了完全分布式系统，在一定程度上优化了文件的组织结构，提升了计算效率。
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=ODIwZWVkMjc0ZTkwODdlOTYyYjAxMTAxMjhmOTFlNTlfTTZjbkdSdlRyWkU0OTlaQm9WT2dPRHZ3TGtZMTBtN3pfVG9rZW46Ym94Y25qd0MzUzVpSGUyUHpwZXdDNmNsTW5oXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img8.png)
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=OWIxNDFhYmFkNmI5ZWIxMDI1YzRjM2RiZTU5MGRlYjBfTkNvWjhaa09CRjBXU2RaTGZTcGZjcDRudWdrejF5U0NfVG9rZW46Ym94Y25XOVFBc2J6UkdBQ3diZUxIOUJqTFpmXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img9.png)
 
 #### 三.冗余存储优化
 
@@ -115,11 +115,11 @@ Hive的运行建立在分布式系统Hadoop之上，因此Hadoop本身的节点�
 
 MySQL:
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=ODM2OGFhYjYxYTAwZWMxNTVlNjYzY2FiODUzODcxMjRfSnc3SGlRd2hzYVBnbGF6b2xOM0xDckJ4U25NdXRSQVJfVG9rZW46Ym94Y25wNXRCVURZRlVrRDN4UktZODVzanFYXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img10.png)
 
 Hive：
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=NmU5MjhiNmNiYmUwNjljZWRlZDUyZGYxMTgzZmMxM2VfQWJhcWZCWXBWT2JZVU1QcjhTZFY4YUNScUtKWFRMWEdfVG9rZW46Ym94Y25JN0x0M2VZdjFGZGY1amZTeUxES1BjXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img11.png)
 
 可见后者省去了繁琐的各表之间的join，SQL语句写起来比MySQL简洁直观很多，大大方便了flask中关于pyspark-sql的书写。
 
@@ -131,15 +131,15 @@ Hive的文件存储格式包括以下几类：TEXTFILE、SEQUENCEFILE、RCFILE�
 
 TEXTFILE：
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=MzlkNTNlZTNjYzNmNDc0NWFjMjVlYjNkYWNlMTAyYTVfd0JrRHdKVzM0a2hLcm9zZlRncUdHcUZNN1NqanJjMklfVG9rZW46Ym94Y25sTGlMQW0yMFkydnc1dElocVYxaHZmXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img12.png)
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=MTU3NDYwMDNlODRlOThhZDMzODVmNzU3NjJlZDY0NjZfMlExaHpZNzhaYzNxUXkxN1VZMmxXcHBQVDBZdVJDRmxfVG9rZW46Ym94Y25ISXNrQmw4UkgzZ3BUQ3AxeVYzRmNiXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img13.png)
 
 ORCFILE：
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=ZWNiNjNiMjg3NTM2OWVkYWI4MzQ5ZTRiZjU0NDJiMDFfeVJBbXRUekVZZ1c3dExRNTF4SnozV050VkJkaGVLSXZfVG9rZW46Ym94Y25WcFFvVlBwYmtWZnNVcGRvVkJRMmViXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img14.png)
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2Q4YjU0NmY0OGJmZGVmMDY2MTBkZmMxOWViZDA1ODlfcnlnZENMVGFsNnFKejZSVlpza21JckdIcEhsWkpqdEpfVG9rZW46Ym94Y25RMldCVktMaUl2WkIwaW9hN0dUenBnXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img15.png)
 
 不难看出，ORC格式的文件存储大小更小，而且查询速度也更加迅速。
 
@@ -153,11 +153,11 @@ ORCFILE：
 
 优化前：
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=NDJmNDVmZDA3N2NiOTljZWZhYTYyZmNjZTkwZDhjY2JfOHRva2tPaVF3c1g1MmhhZldDV3lqMERZU0dNRUdYTWVfVG9rZW46Ym94Y256RzlKUkdNZnYxRW95bHNVWFhUNmlEXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img16.png)
 
 优化后：
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=YmJmOGUzMGQwMzUzZDVmMWJiYWM1MDI3ZTAwNTA2ZjlfajNJR2RsdUxReTQ1eVV2d25iRjl6eEhWbnhaSFJ2bzBfVG9rZW46Ym94Y25GT0lUMnBabjhRZU5TbFdKckljY3ZiXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img17.png)
 
 #### 二.服务器性能优化
 
@@ -167,11 +167,11 @@ ORCFILE：
 
 优化前：
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=OGVjYjM1ODU1MDZhZDQzYzBmZmY1YjJiMDU5Zjk2ZjdfSEVzb3g4WnRDZ1RrbE1TSWVha3YwSzhlUG1mNzJWeWlfVG9rZW46Ym94Y256Sm5yWHBGbG92WnRFcXgwMDlpbU9kXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img18.png)
 
 优化后：
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=OTQzNzliN2M3NTQ5M2M2ZGQ3MjdmMjkwMWY1MjM2MzBfbFpNMU5lcmFxS0Y0OERuNDh5N3FVV2V4NWo3dFNmVVNfVG9rZW46Ym94Y25JdFVtTXozaWMzaUMwZnNOZnluR0NiXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img19.png)
 
 ## 数据质量
 
@@ -246,7 +246,7 @@ ORCFILE：
 
 绘制桑基图如下：
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=MTM1NDUwZmNkNmU4NzRmZjk5ZTE2YWE5MzZmMzhiYmRfYXlndHNnVHBlc2lkeGx5WXBZZ1RESGpTOGVYNHB0SUpfVG9rZW46Ym94Y243cHZyOTA3TG9wM0c1WmlWNE01VzVnXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img20.png)
 
 #### 2.各阶段数据量查询：
 
@@ -254,16 +254,16 @@ ORCFILE：
 
 绘制桑基图如下：
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=ZWFjZWE5OWI2NzNjNGM4MGU1ZmM4NjA5YjNkZjI2NWZfcmZKTkRIN3B0QmU4cTBaRG53am5xZXhPY0F1V0tqSkNfVG9rZW46Ym94Y24ydHlkNXRuczZhRUlZR3JXSWRJaVRnXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img21.png)
 
 #### 3.数据溯源查询：
 
 在本项目的爬虫亚马逊网站阶段中，我们发现亚马逊网页上的电影上映时间数据缺失过多，于是选择了第三方数据源——豆瓣网站进行了二次爬虫，这样做的结果是我们最终的合并数据中关于上映时间的来源分为了两部分，即Amazon网页和Douban网页，我们在爬虫过程中保存了各个上映时间对应的URL，通过这样一种数据血缘形式我们可以清晰的知道某条上映时间是来自Amazon还是Douban，以及直观上看两者占比大概是多少。
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmFiMTRhZDI3MTFiN2ZkMzFlYWQ4OTI3MmEyNGJkNzdfSGR5NFUwNUlRMTZjZ1JyUU9NOWFwUVJvQU5BdjdqMXpfVG9rZW46Ym94Y25PTXBsbmNObjdBQm1SMHZyRWtwc3ViXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img22.png)
 
 #### 4.表数据流动查询：
 
 为了便于springboot后端接口实现，我们在MySQL中提前做好了一部分SQL查询，将其保存为视图（view），方便后端利用jpa查询，以减少查询开支。于是在各个视图建立过程中就有了数据库表与视图（也可以看做一种表）之间的数据流动，通过马哈鱼数据血缘分析工具（SQLFlow），我们可以方便地监测到各个视图的各列数据来源，在后端发现视图中数据出错时能够及时定位数据库中源表相应字段，从而高效率的解决SQL出现的问题，重做SQL。以下是本项目的数据表的数据血缘图示：
 
-![img](https://zat803lgtb.feishu.cn/space/api/box/stream/download/asynccode/?code=NDU5YjQwYjU4ZDkzODg1MjEzMDk4YTJmYTVlN2FmYjZfQmtFdjZhbVVvaWdkZk5oV001WWU3anVSOGRWeTRtZm9fVG9rZW46Ym94Y255ZDdzTUhHcmo5bXNZWVRjOElLWURlXzE2NzM2ODMyMzI6MTY3MzY4NjgzMl9WNA)
+![img](./imgs/img23.png)
